@@ -8,9 +8,10 @@
  */
 #endregion
 
+/*/
 namespace Misc.Blowfish
 {
-    /*/
+
 	/// <summary>
 	/// Static class that uses a lookup table to calculates CRC32
 	/// checksums of input strings.
@@ -132,5 +133,5 @@ namespace Misc.Blowfish
 			return Calculate(data, len, 0xFFFFFFFF);
 		}
 	}
-    //*/
 }
+//*/

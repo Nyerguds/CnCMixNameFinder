@@ -30,11 +30,9 @@ namespace CnCMixNameFinder.Domain
 
         private String m_StartString;
         private String m_EndString;
-        private String m_ExtensionString;
-        private UInt32 m_FileId;
+        private UInt32 m_NameId;
         private Int32 m_MinLength;
         private Int32 m_MaxLength;
-        private Int32 m_SurroundingLength;
         private NameFinderReporter m_Reporter;
         private Boolean m_CancelRun;
         private String m_CancelString;
@@ -51,24 +49,32 @@ namespace CnCMixNameFinder.Domain
         #endregion
 
         #region Public functions
-        public NameFinder(HashMethod method, String startStr, String endStr, String extension, Char[] characters, UInt32 fileId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
+        public NameFinder(HashMethod method, String startStr, String endStr, Char[] characters, UInt32 nameId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
         {
             this.m_NameGenerator = method;
+            Boolean cs = !this.m_NameGenerator.NeedsUpperCase;
             if (startStr == null)
                 startStr = String.Empty;
             if (endStr == null)
                 endStr = String.Empty;
-            m_results = new List<String>();
+            this.m_results = new List<String>();
 
-            m_StartString = startStr.ToUpperInvariant();
-            m_EndString = endStr.ToUpperInvariant();
-            m_ExtensionString = extension.ToUpperInvariant();
-            m_charactersToTest = characters;
-            m_FileId = fileId;
-            m_SurroundingLength = m_StartString.Length + m_EndString.Length;
-            m_MinLength = Math.Max(m_SurroundingLength, minLength);
-            m_MaxLength = maxLength;
-            m_Reporter = reporter;
+            this.m_StartString = cs ? startStr : startStr.ToUpperInvariant();
+            this.m_EndString = cs ? endStr : endStr.ToUpperInvariant();
+            List<Char> charactersList = new List<Char>();
+            for (int i = 0; i < characters.Length; i++)
+            {
+                Char ch = characters[i];
+                if (!cs)
+                    ch = ch.ToString().ToUpperInvariant()[0];
+                if (!charactersList.Contains(ch))
+                    charactersList.Add(ch);
+            }
+            this.m_charactersToTest = charactersList.ToArray();
+            this.m_NameId = nameId;
+            this.m_MinLength = Math.Max(1, Math.Min(maxLength, minLength));
+            this.m_MaxLength = Math.Max(1, Math.Max(maxLength, minLength));
+            this.m_Reporter = reporter;
         }
 
         public void FindName(Boolean getAllMatches)
@@ -76,7 +82,7 @@ namespace CnCMixNameFinder.Domain
             m_CancelRun = false;
             m_CancelString = null;
             m_getAllMatches = getAllMatches;
-            Int32 maxGenLength = m_MaxLength - m_SurroundingLength;
+            Int32 maxGenLength = m_MaxLength;
             DateTime timeStarted = DateTime.Now;
             // check if the string isn't fully filled
             if (maxGenLength == 0 && StringMatches(new Char[0], 0))
@@ -84,29 +90,26 @@ namespace CnCMixNameFinder.Domain
                 if (!m_isMatched)
                 {
                     m_isMatched = true;
-                    m_results.Add(getFileName(new Char[0]));
+                    m_results.Add(this.getFullString(new Char[0]));
                 }
                 return;
             }
 
             // The length of the array is stored permanently during runtime
             m_charactersToTestLength = m_charactersToTest.Length;
-
-            // The length of the password is unknown, so we have to run trough the full search space
-            Int32 estimatedPasswordLength = Math.Max(m_MinLength - m_SurroundingLength - 1, 0);
-
-            while ((!m_isMatched || m_getAllMatches) && estimatedPasswordLength < maxGenLength)
+            Int32 currentGenLength = m_MinLength;
+            while ((!m_isMatched || m_getAllMatches) && currentGenLength < maxGenLength)
             {
-                /* The estimated length of the password will be increased and every possible key for this
-                    * key length will be created and compared against the password */
-                estimatedPasswordLength++;
-                startBruteForce(estimatedPasswordLength);
+                // The estimated length of the password will be increased and every possible key
+                // for this key length will be created and compared against the password
+                this.StartBruteForce(currentGenLength);
                 if (m_CancelRun && m_CancelString != null)
                 {
                     if (m_Reporter != null)
-                        m_Reporter.ShowStatus(ProcessingStatus.ABORTED, m_CancelString, estimatedPasswordLength + m_SurroundingLength);
+                        m_Reporter.ShowStatus(ProcessingStatus.ABORTED, m_CancelString, currentGenLength);
                     break;
                 }
+                currentGenLength++;
             }
             m_timePassed = DateTime.Now.Subtract(timeStarted).TotalSeconds;
             if (!m_CancelRun && m_Reporter != null)
@@ -129,12 +132,12 @@ namespace CnCMixNameFinder.Domain
         /// Starts the recursive method which will create the keys via brute force
         /// </summary>
         /// <param name="keyLength">The length of the key</param>
-        private void startBruteForce(Int32 keyLength)
+        private void StartBruteForce(Int32 keyLength)
         {
-            Char[] keyChars = createCharArray(keyLength, m_charactersToTest[0]);
+            Char[] keyChars = this.CreateCharArray(keyLength, m_charactersToTest[0]);
             // The index of the last character will be stored for slight perfomance improvement
             Int32 indexOfLastChar = keyLength - 1;
-            createNewKey(0, keyChars, keyLength, indexOfLastChar);
+            this.CreateNewKey(0, keyChars, keyLength, indexOfLastChar);
         }
 
         /// <summary>
@@ -143,7 +146,7 @@ namespace CnCMixNameFinder.Domain
         /// <param name="length">The length of the array</param>
         /// <param name="defaultChar">The char with whom the array will be filled</param>
         /// <returns></returns>
-        private Char[] createCharArray(Int32 length, Char defaultChar)
+        private Char[] CreateCharArray(Int32 length, Char defaultChar)
         {
             return (from c in new Char[length] select defaultChar).ToArray();
         }
@@ -156,7 +159,7 @@ namespace CnCMixNameFinder.Domain
         /// <param name="keyChars">The current key represented as char array</param>
         /// <param name="keyLength">The length of the key</param>
         /// <param name="indexOfLastChar">The index of the last character of the key</param>
-        private void createNewKey(Int32 currentCharPosition, Char[] keyChars, Int32 keyLength, Int32 indexOfLastChar)
+        private void CreateNewKey(Int32 currentCharPosition, Char[] keyChars, Int32 keyLength, Int32 indexOfLastChar)
         {
             Int32 nextCharPosition = currentCharPosition + 1;
             // We are looping trough the full length of our charactersToTest array
@@ -173,7 +176,7 @@ namespace CnCMixNameFinder.Domain
                 // The method calls itself recursively until all positions of the key char array have been replaced
                 if (currentCharPosition < indexOfLastChar)
                 {
-                    createNewKey(nextCharPosition, keyChars, keyLength, indexOfLastChar);
+                    this.CreateNewKey(nextCharPosition, keyChars, keyLength, indexOfLastChar);
                 }
                 else
                 {
@@ -182,9 +185,9 @@ namespace CnCMixNameFinder.Domain
                     // check if run is paused
                     if (RunPaused)
                     {
-                        String currentString = getFileName(keyChars);
+                        String currentString = this.getFullString(keyChars);
                         if (m_Reporter != null)
-                            m_Reporter.ShowStatus(ProcessingStatus.PAUSED, currentString, keyLength + m_SurroundingLength);
+                            m_Reporter.ShowStatus(ProcessingStatus.PAUSED, currentString, keyLength);
                         while (RunPaused)
                         {
                             Thread.Sleep(500);
@@ -195,7 +198,7 @@ namespace CnCMixNameFinder.Domain
                     // check if run should be cancelled
                     if (m_CancelRun)
                     {
-                        m_CancelString = getFileName(keyChars);
+                        m_CancelString = this.getFullString(keyChars);
                         return;
                     }
                     /* The char array will be converted to a string and compared to the password. If the password
@@ -205,7 +208,7 @@ namespace CnCMixNameFinder.Domain
                         if (!m_isMatched)
                         {
                             m_isMatched = true;
-                            m_results.Add(getFileName(keyChars));
+                            m_results.Add(this.getFullString(keyChars));
                         }
                         if (!m_getAllMatches)
                             return;
@@ -216,28 +219,24 @@ namespace CnCMixNameFinder.Domain
 
         private Boolean StringMatches(Char[] newStringChars, Int32 keyLength)
         {
-            String testFileName = getFileName(newStringChars);
+            String testString = this.getFullString(newStringChars);
+            // Only show one in every million keys. This is a lot less than it would seem; should show about a key per second (depending on algo and PC speed of course).
             if (m_Reporter != null && (m_computedKeys & 0xFFFFF) == 1)
             {
-                m_Reporter.ShowStatus(ProcessingStatus.RUNNING, testFileName, keyLength + m_SurroundingLength);
+                m_Reporter.ShowStatus(ProcessingStatus.RUNNING, testString, keyLength);
             }
-            if (m_FileId == m_NameGenerator.GetNameId(testFileName))
+            if (this.m_NameId == m_NameGenerator.GetNameId(testString, true))
             {
                 if (m_Reporter != null)
-                    m_Reporter.ShowStatus(ProcessingStatus.FOUND, testFileName, keyLength + m_SurroundingLength);
+                    m_Reporter.ShowStatus(ProcessingStatus.FOUND, testString, keyLength);
                 return true;
             }
             return false;
         }
 
-        private String getFileName(Char[] newStringChars)
+        private String getFullString(Char[] newStringChars)
         {
-            return String.Format("{0}{1}{2}.{3}", m_StartString, new String(newStringChars), m_EndString, m_ExtensionString);
-        }
-
-        private String getFileName(Char[] newStringChars, String extension)
-        {
-            return String.Format("{0}{1}{2}.{3}", m_StartString, new String(newStringChars), m_EndString, extension);
+            return String.Format("{0}{1}{2}", m_StartString, new String(newStringChars), m_EndString);
         }
         #endregion
     }

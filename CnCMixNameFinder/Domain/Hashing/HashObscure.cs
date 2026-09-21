@@ -8,10 +8,12 @@ namespace CnCMixNameFinder.Domain
     public class HashObscure : HashMethod
     {
         private const UInt32 OBSCURE_MAGIC_NUM = 0x516150;
-        
-        public override UInt32 GetNameId(String name)
+
+        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
         {
-            Byte[] values = Encoding.ASCII.GetBytes(name.ToUpperInvariant());
+            if (!assumeCorrectCase)
+                name = name.ToUpperInvariant();
+            Byte[] values = Encoding.ASCII.GetBytes(name);
             if (values.Length < 7)
             {
                 Byte[] values2 = new Byte[7];

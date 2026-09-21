@@ -45,7 +45,7 @@
             this.cmbHashMethod.Location = new System.Drawing.Point(117, 11);
             this.cmbHashMethod.Name = "cmbHashMethod";
             this.cmbHashMethod.Size = new System.Drawing.Size(200, 21);
-            this.cmbHashMethod.TabIndex = 34;
+            this.cmbHashMethod.TabIndex = 0;
             this.cmbHashMethod.SelectedIndexChanged += new System.EventHandler(this.TriggerCalculateHash);
             // 
             // lblHashMethod
@@ -76,7 +76,7 @@
             this.txtId.Name = "txtId";
             this.txtId.ReadOnly = true;
             this.txtId.Size = new System.Drawing.Size(200, 20);
-            this.txtId.TabIndex = 36;
+            this.txtId.TabIndex = 2;
             // 
             // lblFilename
             // 
@@ -94,7 +94,7 @@
             this.txtFilename.Location = new System.Drawing.Point(117, 38);
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.Size = new System.Drawing.Size(200, 20);
-            this.txtFilename.TabIndex = 38;
+            this.txtFilename.TabIndex = 1;
             this.txtFilename.TextChanged += new System.EventHandler(this.TriggerCalculateHash);
             this.txtFilename.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilename_Validating);
             // 

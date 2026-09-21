@@ -7,12 +7,14 @@ namespace CnCMixNameFinder.Domain
 {
     internal class HashBR : HashMethod
     {
-        public override uint GetNameId(string name)
+        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
         {
+            if (!assumeCorrectCase)
+                name = name.ToUpperInvariant();
             return 0;
         }
 
-        public override string GetMethodName()
+        public override String GetMethodName()
         {
             return "Unknown (Blade Runner)";
         }

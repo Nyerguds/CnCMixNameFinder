@@ -84,6 +84,7 @@ namespace LarchenkoCRC32
 
         public void Update(Byte[] data, Int32 offset, Int32 count)
         {
+            // ReSharper disable once ObjectCreationAsStatement
             new ArraySegment<Byte>(data, offset, count);     // check arguments
 
             if (count <= ThreadCost || ProcessorCount <= 1)

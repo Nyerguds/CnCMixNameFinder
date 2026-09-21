@@ -51,14 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\CRC32.cs" />
-    <Compile Include="Domain\HashBR.cs" />
-    <Compile Include="Domain\HashCRC32.cs" />
-    <Compile Include="Domain\HashLoL3.cs" />
+    <Compile Include="Domain\Hashing\HashBR.cs" />
+    <Compile Include="Domain\Hashing\HashCRC32.cs" />
+    <Compile Include="Domain\Hashing\HashROR.cs" />
     <Compile Include="Domain\HashMethod.cs" />
-    <Compile Include="Domain\HashObscure.cs" />
+    <Compile Include="Domain\Hashing\HashObscure.cs" />
     <Compile Include="Domain\NameFinder.cs" />
-    <Compile Include="Domain\HashROL.cs" />
+    <Compile Include="Domain\Hashing\HashROL.cs" />
     <Compile Include="Domain\ParallelCRC.cs" />
+    <Compile Include="Domain\BitFunctions.cs" />
+    <Compile Include="UI\EnhNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\FrmMixNameFinder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +105,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="examples\examples_lol3.txt" />
     <Content Include="Resources\cchasher.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

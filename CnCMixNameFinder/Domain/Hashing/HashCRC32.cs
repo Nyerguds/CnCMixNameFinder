@@ -1,5 +1,4 @@
-﻿using Misc.Blowfish;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +8,10 @@ namespace CnCMixNameFinder.Domain
 {
     public class HashCRC32 : HashMethod
     {
-        public override UInt32 GetNameId(String name)
+        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
         {
-            // Assume all input is upper case. This will save time.
-            //name = name.ToUpperInvariant();
+            if (!assumeCorrectCase)
+                name = name.ToUpperInvariant();
             Int32 l = name.Length;
             Int32 a = l >> 2;
             if ((l & 3) != 0)

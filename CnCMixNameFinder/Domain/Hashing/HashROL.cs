@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Misc.Blowfish;
 
 namespace CnCMixNameFinder.Domain
 {
     public class HashROL : HashMethod
     {
-        public override UInt32 GetNameId(String name)
+        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
         {
-            Byte[] values = Encoding.ASCII.GetBytes(name.ToUpperInvariant());
+            if (!assumeCorrectCase)
+                name = name.ToUpperInvariant();
+            Byte[] values = Encoding.ASCII.GetBytes(name);
             Int32 i = 0;
             UInt32 id = 0;
             Int32 l = values.Length;          // length of the filename
@@ -23,7 +24,7 @@ namespace CnCMixNameFinder.Domain
                         a += ((UInt32)values[i] << 24);
                     i++;
                 }
-                id = (id << 1 | id >> 31) + a;
+                id = BitFunctions.RotateLeft(id,1) + a;
             }
             return id;
         }

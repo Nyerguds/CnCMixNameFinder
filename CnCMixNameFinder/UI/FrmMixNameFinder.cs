@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CnCMixNameFinder.Domain;
@@ -14,9 +17,10 @@ namespace CnCMixNameFinder.UI
         public delegate void invoke_delegate_single_parameter(Object c, Object value);
         public delegate void invoke_delegate_with_arg(Object value);
         private Thread processingThread;
+        private NameFinder m_namefinder;
+        private Boolean m_editingText = false;
         private readonly String StrButtonPause = "Pause";
         private readonly String StrButtonUnpause = "Unpause";
-        private NameFinder m_namefinder;
         private const String CHARS_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const String CHARS_NUMERIC = "0123456789";
         private const String CHARS_FULL = CHARS_ALPHABET + CHARS_NUMERIC + "_";
@@ -31,6 +35,19 @@ namespace CnCMixNameFinder.UI
         {
             InitializeComponent();
             cmbHashMethod.DataSource = HashMethod.GetRegisteredMethods();
+            this.Text = "MixNameFinder " + ProgramVersion();
+        }
+
+        public static String ProgramVersion()
+        {
+            FileVersionInfo ver = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            //Version v = AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().Location).Version;
+            String version = String.Format("v{0}.{1}", ver.FileMajorPart, ver.FileMinorPart);
+            if (ver.FileBuildPart > 0)
+                version += "." + ver.FileBuildPart;
+            if (ver.FilePrivatePart > 0)
+                version += "." + ver.FilePrivatePart;
+            return version;
         }
 
         private void Generate(Object parameters)
@@ -39,18 +56,17 @@ namespace CnCMixNameFinder.UI
             Object[] arrParams = (Object[])parameters;
             String startStr = (String)arrParams[0];
             String endStr = (String)arrParams[1];
-            String extension = (String)arrParams[2];
-            UInt32 fileId = (UInt32)arrParams[3];
-            Int32 minLength = (Int32)arrParams[4];
-            Int32 maxLength = (Int32)arrParams[5];
-            Char[] chars = (Char[])arrParams[6];
-            Boolean getAllMatches = (Boolean)arrParams[7];
-            HashMethod hashMethod = (HashMethod)arrParams[8];
+            UInt32 fileId = (UInt32)arrParams[2];
+            Int32 minLength = (Int32)arrParams[3];
+            Int32 maxLength = (Int32)arrParams[4];
+            Char[] chars = (Char[])arrParams[5];
+            Boolean getAllMatches = (Boolean)arrParams[6];
+            HashMethod hashMethod = (HashMethod)arrParams[7];
 
             txtResult.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtResult, String.Empty);
             txtStatus.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtStatus, String.Empty);
 
-            m_namefinder = new NameFinder(hashMethod, startStr, endStr, extension, chars, fileId, minLength, maxLength, this);
+            m_namefinder = new NameFinder(hashMethod, startStr, endStr, chars, fileId, minLength, maxLength, this);
             m_namefinder.FindName(getAllMatches);
 
             if (!m_namefinder.IsMatched)
@@ -83,9 +99,8 @@ namespace CnCMixNameFinder.UI
                 return;
             }
             Object[] arrParams = {
-                txtStart.Text.ToUpperInvariant(), txtEnd.Text.ToUpperInvariant(), txtExtension.Text.ToUpperInvariant(), fileId,
-                (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value, this.txtChars.Text.ToCharArray(),
-                chkFindAllMatches.Checked, cmbHashMethod.SelectedValue
+                txtStart.Text, txtEnd.Text, fileId, (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value,
+                this.txtChars.Text.ToCharArray(), chkFindAllMatches.Checked, cmbHashMethod.SelectedValue
             };
 
             processingThread = new Thread(Generate);
@@ -97,7 +112,6 @@ namespace CnCMixNameFinder.UI
             this.txtId.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtId, !enabled);
             this.txtStart.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtStart, !enabled);
             this.txtEnd.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtEnd, !enabled);
-            this.txtExtension.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtExtension, !enabled);
             this.nmrMinLength.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.nmrMinLength, !enabled);
             this.nmrMaxLength.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.nmrMaxLength, !enabled);
             this.txtChars.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.txtChars, enabled);
@@ -198,13 +212,13 @@ namespace CnCMixNameFinder.UI
                     break;
                 case ProcessingStatus.RUNNING:
                 default:
-                    report = "Generating string \"" + currentStr + "\" (length " + keyLength + ")";
+                    report = "Generating string \"" + currentStr + "\" (generated length " + keyLength + ")";
                     break;
                 case ProcessingStatus.PAUSED:
                     report = "Paused at \"" + currentStr + "\" (length " + keyLength + ")";
                     break;
                 case ProcessingStatus.ABORTED:
-                    report = "Aborted. Last string: \"" + currentStr + "\" (length " + keyLength + ")";
+                    report = "Aborted. Last string: \"" + currentStr + "\" (generated length " + keyLength + ")";
                     break;
                 case ProcessingStatus.ENDED:
                     if (String.IsNullOrEmpty(currentStr))
@@ -253,14 +267,22 @@ namespace CnCMixNameFinder.UI
 
         private void TextBoxUppercase(object sender, EventArgs e)
         {
-            if (!(sender is TextBox))
+            if (m_editingText)
                 return;
-            TextBox textbox = (TextBox)sender;
-            Int32 selStart = textbox.SelectionStart;
-            Int32 selLen = textbox.SelectionStart;
-            textbox.Text = textbox.Text.ToUpperInvariant();
-            textbox.SelectionStart = selStart;
-            textbox.SelectionStart = selLen;
+            try
+            {
+                if (!(sender is TextBox))
+                    return;
+                TextBox textbox = (TextBox)sender;
+                Int32 selStart = textbox.SelectionStart;
+                textbox.Text = textbox.Text.ToUpperInvariant();
+                textbox.SelectionStart = selStart;
+                textbox.SelectionLength = 0;
+            }
+            finally
+            {
+                m_editingText = false;
+            }
         }
 
         private void ValidateUniqueUppercase(object sender, System.ComponentModel.CancelEventArgs e)
@@ -296,6 +318,29 @@ namespace CnCMixNameFinder.UI
             Point ptLowerLeft = new Point(0, button.Height);
             ptLowerLeft = button.PointToScreen(ptLowerLeft);
             cms.Show(ptLowerLeft);
+        }
+
+        private void txtId_TextChanged(object sender, EventArgs e)
+        {
+            if (m_editingText)
+                return;
+            try
+            {
+                m_editingText = true;
+                String input = txtId.Text.ToUpperInvariant();
+                Int32 selStart = this.txtId.SelectionStart;
+                String output = new String(input.Where(x => (x >= '0' && x <= '9') || (x >= 'A' && x <= 'F')).ToArray());
+                if (String.Equals(txtId.Text, output))
+                    return;
+                txtId.Text = output;
+                if (Math.Min(selStart, txtId.Text.Length) > 0 && selStart <= txtId.Text.Length && output[selStart - 1] != input[selStart - 1])
+                    selStart--;
+                this.txtId.SelectionStart = Math.Min(selStart, txtId.Text.Length);
+            }
+            finally
+            {
+                m_editingText = false;
+            }
         }
     }
 }
