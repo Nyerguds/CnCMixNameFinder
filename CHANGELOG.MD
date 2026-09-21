@@ -20,7 +20,7 @@ Release date: 2014-01-27 18:24
 
 Release date: 2016-04-20 15:03
 
-* Added CRC32 (TS), Poor Man's (setup.mix), and dummies for Blade Runner and LOL3.
+* Added CRC32 (TS), Poor Man's (setup.mix), and dummies for Blade Runner and Lands of Lore 3.
 * Added new program icon.
 
 ## v1.0.3.0
@@ -35,13 +35,13 @@ Release date: 2016-11-16 09:10
 
 * Added input field for characters to brute-force.
 * Replaced code for CRC32 with Eugene Larchenko's ParallelCRC.
-* Disabled unimplemented HashBR and HashLoL3.
+* Disabled unimplemented Blade Runner and Lands of Lore 3 hashers.
 
 ## v1.0.5.0
 
 Release date: 2016-11-21 10:13
 
-* Implemented LoL3 hasher as HashROR.
+* Implemented Lands of Lore 3 hasher as "ROR".
 
 ## v1.0.6.0
 
