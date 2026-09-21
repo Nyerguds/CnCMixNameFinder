@@ -6,8 +6,8 @@ namespace CnCMixNameFinder.Domain
 {
     public class HashObfuscateSole : HashObfuscate
     {
-        public override string DisplayName => "Obsfuscate Sole (hidden options)";
-        public override string SimpleName => "ObsfuscateSole";
+        public override string DisplayName => "Obfuscate Sole (hidden options)";
+        public override string SimpleName => "ObfuscateSole";
 
         public HashObfuscateSole()
         {
@@ -31,8 +31,8 @@ namespace CnCMixNameFinder.Domain
     public class HashObfuscate : HashRol
     {
 
-        public override string DisplayName => "Obsfuscate (hidden options)";
-        public override string SimpleName => "Obsfuscate";
+        public override string DisplayName => "Obfuscate (hidden options)";
+        public override string SimpleName => "Obfuscate";
 
         private static bool[] isGraph = new bool[256];
 

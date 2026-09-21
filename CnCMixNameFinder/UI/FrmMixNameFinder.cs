@@ -331,7 +331,27 @@ namespace CnCMixNameFinder.UI
                     //File.AppendAllText("");
                 }
                 //*/
-                File.AppendAllText(logFile.FullName, Environment.NewLine + str, Encoding.ASCII);
+                string firstLine = null;
+                bool isNew = !logFile.Exists || logFile.Length == 0;
+                if (isNew)
+                {
+                    string method = origin.IsDictionary ? "dictionary" : "brute force";
+                    string algo = origin.HashMethodDisplayName;
+                    string multiple = origin.NameIds.Length > 1 ? "s" : String.Empty;
+                    string ids = String.Join(", ", origin.NameIds.Select(nid => nid.ToString("X8")).ToArray());
+                    firstLine = String.Format("Looking for {0} matches, using algorithm {1}, for id{2} [{3}]:", method, algo, multiple, ids);
+                }
+                using (FileStream fs = logFile.OpenWrite())
+                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    if (isNew && firstLine != null)
+                    {
+                        sw.Write(firstLine);
+                        sw.Flush();
+                    }
+                    fs.Position = fs.Length;
+                    sw.Write(Environment.NewLine + str);
+                }
             }
         }
 

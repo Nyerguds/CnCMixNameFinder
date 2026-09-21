@@ -62,6 +62,7 @@ namespace CnCMixNameFinder.Domain
         public virtual double TimeTaken => m_timeTaken;
         public virtual long ComputedKeys => m_computedKeys;
         public virtual uint[] NameIds => m_NameIdsInput.ToArray();
+        public virtual bool IsDictionary => m_isDictionary;
         public virtual int MinLength => m_MinLength;
         public virtual int MaxLength => m_MaxLength;
         public virtual string StartString => m_StartString;
