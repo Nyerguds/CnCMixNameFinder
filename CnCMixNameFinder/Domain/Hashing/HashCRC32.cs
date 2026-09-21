@@ -8,10 +8,8 @@ namespace CnCMixNameFinder.Domain
 {
     public class HashCRC32 : HashMethod
     {
-        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
+        public override UInt32 GetNameIdCorrectCase(String name)
         {
-            if (!assumeCorrectCase)
-                name = name.ToUpperInvariant();
             Int32 l = name.Length;
             Int32 a = l >> 2;
             if ((l & 3) != 0)

@@ -7,10 +7,8 @@ namespace CnCMixNameFinder.Domain
 {
     public class HashROR : HashMethod
     {
-        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
+        public override UInt32 GetNameIdCorrectCase(String name)
         {
-            if (!assumeCorrectCase)
-                name = name.ToUpperInvariant();
             UInt32 id = 0;
             for (Int32 i = 0; i < name.Length; i++)
             {

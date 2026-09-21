@@ -53,11 +53,12 @@
     <Compile Include="Domain\CRC32.cs" />
     <Compile Include="Domain\Hashing\HashBR.cs" />
     <Compile Include="Domain\Hashing\HashCRC32.cs" />
+    <Compile Include="Domain\Hashing\HashObfuscate.cs" />
     <Compile Include="Domain\Hashing\HashROR.cs" />
     <Compile Include="Domain\HashMethod.cs" />
     <Compile Include="Domain\Hashing\HashObscure.cs" />
     <Compile Include="Domain\NameFinder.cs" />
-    <Compile Include="Domain\Hashing\HashROL.cs" />
+    <Compile Include="Domain\Hashing\HashRol.cs" />
     <Compile Include="Domain\ParallelCRC.cs" />
     <Compile Include="Domain\BitFunctions.cs" />
     <Compile Include="UI\EnhNumericUpDown.cs">
@@ -89,6 +90,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include=".editorconfig" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

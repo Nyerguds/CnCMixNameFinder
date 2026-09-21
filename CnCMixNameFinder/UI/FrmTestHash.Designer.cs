@@ -96,13 +96,13 @@
             this.txtFilename.Size = new System.Drawing.Size(200, 20);
             this.txtFilename.TabIndex = 1;
             this.txtFilename.TextChanged += new System.EventHandler(this.TriggerCalculateHash);
-            this.txtFilename.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilename_Validating);
+            this.txtFilename.Validating += new System.ComponentModel.CancelEventHandler(this.TxtFilename_Validating);
             // 
             // FrmTestHash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 99);
+            this.ClientSize = new System.Drawing.Size(334, 100);
             this.Controls.Add(this.lblId);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.lblFilename);
@@ -110,9 +110,11 @@
             this.Controls.Add(this.cmbHashMethod);
             this.Controls.Add(this.lblHashMethod);
             this.Icon = global::CnCMixNameFinder.Properties.Resources.cchasher;
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(350, 138);
             this.Name = "FrmTestHash";
             this.Text = "Test hashing algorithms";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmTestHash_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

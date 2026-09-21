@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CnCMixNameFinder.Domain;
@@ -18,7 +17,7 @@ namespace CnCMixNameFinder.UI
         public delegate void invoke_delegate_with_arg(Object value);
         private Thread processingThread;
         private NameFinder m_namefinder;
-        private Boolean m_editingText = false;
+        private Boolean m_editingText;
         private readonly String StrButtonPause = "Pause";
         private readonly String StrButtonUnpause = "Unpause";
         private const String CHARS_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -150,18 +149,14 @@ namespace CnCMixNameFinder.UI
             if (b is Boolean)
             {
                 c.Enabled = (Boolean)b;
-                if (c is ListBox)
+                ListBox lb = c as ListBox;
+                if (lb == null)
+                    return;
+                try
                 {
-                    try
-                    {
-                        ListBox lb = (ListBox)c;
-                        if (!lb.Enabled)
-                            lb.BackColor = SystemColors.Control;
-                        else
-                            lb.BackColor = SystemColors.Window;
-                    }
-                    catch { /* ignore */ }
+                    lb.BackColor = lb.Enabled ? SystemColors.Window : SystemColors.Control;
                 }
+                catch { /* ignore */ }
             }
         }
 
@@ -260,12 +255,15 @@ namespace CnCMixNameFinder.UI
             }
         }
 
-        private void LblHashMethod_DoubleClick(Object sender, EventArgs e)
+        private void lblHashMethod_Click(Object sender, EventArgs e)
         {
-            new FrmTestHash().ShowDialog(this);
+            using (FrmTestHash hash = new FrmTestHash())
+            {
+                hash.ShowDialog(this);
+            }
         }
 
-        private void TextBoxUppercase(object sender, EventArgs e)
+        private void TextBoxUppercase(Object sender, EventArgs e)
         {
             if (m_editingText)
                 return;
@@ -285,7 +283,7 @@ namespace CnCMixNameFinder.UI
             }
         }
 
-        private void ValidateUniqueUppercase(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ValidateUniqueUppercase(Object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!(sender is TextBox))
                 return;
@@ -300,10 +298,11 @@ namespace CnCMixNameFinder.UI
             textbox.Text = new String(uniquechars.ToArray());
         }
 
-        private void BtnQuickChars_Click(object sender, EventArgs e)
+        private void BtnQuickChars_Click(Object sender, EventArgs e)
         {
-            if (sender is Button)
-                OpenInsertToolStrip((Button)sender, this.txtChars);
+            Button button = sender as Button;
+            if (button != null)
+                OpenInsertToolStrip(button, this.txtChars);
         }
 
         private void OpenInsertToolStrip(Button button, TextBox target)
@@ -320,7 +319,7 @@ namespace CnCMixNameFinder.UI
             cms.Show(ptLowerLeft);
         }
 
-        private void txtId_TextChanged(object sender, EventArgs e)
+        private void txtId_TextChanged(Object sender, EventArgs e)
         {
             if (m_editingText)
                 return;
@@ -342,5 +341,6 @@ namespace CnCMixNameFinder.UI
                 m_editingText = false;
             }
         }
+
     }
 }

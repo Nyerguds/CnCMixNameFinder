@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CnCMixNameFinder.Domain
 {
-    internal class HashBR : HashMethod
+    public class HashObfuscate : HashMethod
     {
         public override UInt32 GetNameIdCorrectCase(String name)
         {
-            return 0;
+            throw new NotImplementedException();
         }
 
         public override String GetMethodName()
         {
-            return "Unknown (Blade Runner)";
+            return "Obsfuscate (hidden options)";
         }
     }
 }

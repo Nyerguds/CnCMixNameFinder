@@ -37,12 +37,10 @@
             this.txtResult = new System.Windows.Forms.TextBox();
             this.lblResult = new System.Windows.Forms.Label();
             this.btnGenerate = new System.Windows.Forms.Button();
-            this.nmrMaxLength = new Nyerguds.Util.UI.EnhNumericUpDown();
             this.lblMaxLength = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.btnAbort = new System.Windows.Forms.Button();
-            this.nmrMinLength = new Nyerguds.Util.UI.EnhNumericUpDown();
             this.lblMinLength = new System.Windows.Forms.Label();
             this.chkFindAllMatches = new System.Windows.Forms.CheckBox();
             this.btnPause = new System.Windows.Forms.Button();
@@ -51,8 +49,10 @@
             this.txtChars = new System.Windows.Forms.TextBox();
             this.lblChars = new System.Windows.Forms.Label();
             this.btnQuickChars = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.nmrMaxLength)).BeginInit();
+            this.nmrMinLength = new Nyerguds.Util.UI.EnhNumericUpDown();
+            this.nmrMaxLength = new Nyerguds.Util.UI.EnhNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nmrMinLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmrMaxLength)).BeginInit();
             this.SuspendLayout();
             // 
             // txtStart
@@ -145,35 +145,6 @@
             this.btnGenerate.UseVisualStyleBackColor = true;
             this.btnGenerate.Click += new System.EventHandler(this.BtnGenerate_Click);
             // 
-            // nmrMaxLength
-            // 
-            this.nmrMaxLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmrMaxLength.EnteredValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmrMaxLength.Location = new System.Drawing.Point(112, 140);
-            this.nmrMaxLength.Maximum = new decimal(new int[] {
-            32,
-            0,
-            0,
-            0});
-            this.nmrMaxLength.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmrMaxLength.Name = "nmrMaxLength";
-            this.nmrMaxLength.Size = new System.Drawing.Size(300, 20);
-            this.nmrMaxLength.TabIndex = 14;
-            this.nmrMaxLength.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            // 
             // lblMaxLength
             // 
             this.lblMaxLength.AutoSize = true;
@@ -213,35 +184,6 @@
             this.btnAbort.UseVisualStyleBackColor = true;
             this.btnAbort.Click += new System.EventHandler(this.BtnAbort_Click);
             // 
-            // nmrMinLength
-            // 
-            this.nmrMinLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmrMinLength.EnteredValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmrMinLength.Location = new System.Drawing.Point(112, 114);
-            this.nmrMinLength.Maximum = new decimal(new int[] {
-            32,
-            0,
-            0,
-            0});
-            this.nmrMinLength.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmrMinLength.Name = "nmrMinLength";
-            this.nmrMinLength.Size = new System.Drawing.Size(300, 20);
-            this.nmrMinLength.TabIndex = 12;
-            this.nmrMinLength.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // lblMinLength
             // 
             this.lblMinLength.AutoSize = true;
@@ -278,12 +220,13 @@
             // 
             this.lblHashMethod.AutoSize = true;
             this.lblHashMethod.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblHashMethod.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblHashMethod.Location = new System.Drawing.Point(12, 15);
             this.lblHashMethod.Name = "lblHashMethod";
             this.lblHashMethod.Size = new System.Drawing.Size(87, 15);
             this.lblHashMethod.TabIndex = 1;
             this.lblHashMethod.Text = "Hashing Method";
-            this.lblHashMethod.DoubleClick += new System.EventHandler(this.LblHashMethod_DoubleClick);
+            this.lblHashMethod.Click += new System.EventHandler(this.lblHashMethod_Click);
             // 
             // cmbHashMethod
             // 
@@ -328,6 +271,64 @@
             this.btnQuickChars.UseVisualStyleBackColor = true;
             this.btnQuickChars.Click += new System.EventHandler(this.BtnQuickChars_Click);
             // 
+            // nmrMinLength
+            // 
+            this.nmrMinLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmrMinLength.EnteredValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmrMinLength.Location = new System.Drawing.Point(112, 114);
+            this.nmrMinLength.Maximum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.nmrMinLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmrMinLength.Name = "nmrMinLength";
+            this.nmrMinLength.Size = new System.Drawing.Size(300, 20);
+            this.nmrMinLength.TabIndex = 12;
+            this.nmrMinLength.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // nmrMaxLength
+            // 
+            this.nmrMaxLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmrMaxLength.EnteredValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmrMaxLength.Location = new System.Drawing.Point(112, 140);
+            this.nmrMaxLength.Maximum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.nmrMaxLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmrMaxLength.Name = "nmrMaxLength";
+            this.nmrMaxLength.Size = new System.Drawing.Size(300, 20);
+            this.nmrMaxLength.TabIndex = 14;
+            this.nmrMaxLength.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
             // FrmMixNameFinder
             // 
             this.AcceptButton = this.btnGenerate;
@@ -363,8 +364,8 @@
             this.Text = "MixNameFinder";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMixNameFinder_FormClosing);
             this.Shown += new System.EventHandler(this.FrmMixNameFinder_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.nmrMaxLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmrMinLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmrMaxLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

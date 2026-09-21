@@ -9,10 +9,8 @@ namespace CnCMixNameFinder.Domain
     {
         private const UInt32 OBSCURE_MAGIC_NUM = 0x516150;
 
-        public override UInt32 GetNameId(String name, Boolean assumeCorrectCase)
+        public override UInt32 GetNameIdCorrectCase(String name)
         {
-            if (!assumeCorrectCase)
-                name = name.ToUpperInvariant();
             Byte[] values = Encoding.ASCII.GetBytes(name);
             if (values.Length < 7)
             {
@@ -30,7 +28,7 @@ namespace CnCMixNameFinder.Domain
             return (UInt32)v3;
         }
 
-        private UInt32 testfnc(String name)
+        private UInt32 Testfnc(String name)
         {
             Byte[] values = Encoding.ASCII.GetBytes(name.ToUpperInvariant());
             if (values.Length < 7)
@@ -45,7 +43,7 @@ namespace CnCMixNameFinder.Domain
 
         public override String GetMethodName()
         {
-            return "Poor Man's (Setup.Mix)";
+            return "Poor Man's (SETUP.MIX)";
         }
     }
 }

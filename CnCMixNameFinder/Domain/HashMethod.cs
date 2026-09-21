@@ -8,14 +8,11 @@ namespace CnCMixNameFinder.Domain
     public abstract class HashMethod
     {
         /// <summary>
-        /// The hashing method. The "assumeCorrectCase" arg is an optimization for brute-force;
-        /// if the hash method needs uppercase text, this can be done with the original input data
-        /// instead of having to apply it to each string during the brute force operation itself.
+        /// The hashing method. Assumes that the input is already formatted to the correct case according to NeedsUpperCase.
         /// </summary>
         /// <param name="name">String to hash.</param>
-        /// <param name="assumeCorrectCase">Assume input is in the case specified by the hashing method's NeedsUpperCase property.</param>
         /// <returns>The hashed value.</returns>
-        public abstract UInt32 GetNameId(String name, Boolean assumeCorrectCase);
+        public abstract UInt32 GetNameIdCorrectCase(String name);
         
         /// <summary>
         /// Returns the name of the hashing method.
@@ -36,7 +33,7 @@ namespace CnCMixNameFinder.Domain
             if (name == null)
                 name = String.Empty;
             name = name.Trim();
-            return GetNameId(this.NeedsUpperCase ? name.ToUpperInvariant() : name, true);
+            return GetNameIdCorrectCase(this.NeedsUpperCase ? name.ToUpperInvariant() : name);
         }
 
         public String GetNameIdHexString(String name)
@@ -44,9 +41,9 @@ namespace CnCMixNameFinder.Domain
             return this.GetNameId(name).ToString("X4").PadLeft(8, '0');
         }
 
-        public String GetNameIdHexString(String name, Boolean assumeUppercase)
+        public String GetNameIdHexString(String name, Boolean assumeCorrectCase)
         {
-            return this.GetNameId(name, assumeUppercase).ToString("X4").PadLeft(8, '0');
+            return (assumeCorrectCase ? this.GetNameIdCorrectCase(name) : GetNameId(name)).ToString("X4").PadLeft(8, '0');
         }
 
         public override String ToString()
@@ -57,11 +54,13 @@ namespace CnCMixNameFinder.Domain
         public static HashMethod[] GetRegisteredMethods()
         {
             return new HashMethod[] {
-                new HashROL(),     // TD/RA
-                new HashCRC32(),   // TS/RA2
-                new HashROR(),     // Lands of Lore 3
-                new HashObscure(), // setup mix files
-                //new HashBR(),      // Blade Runner (not implemented)
+                new HashRol1(),         // TD/RA
+                new HashCRC32(),       // TS/RA2
+                new HashRol3(),         // TS/RA2 setup
+                new HashROR(),         // Lands of Lore 3
+                new HashObscure(),     // setup mix files
+                //new  HashObfuscate(),  // hidden options
+                //new HashBR(),          // Blade Runner (not implemented)
             };
         }
 

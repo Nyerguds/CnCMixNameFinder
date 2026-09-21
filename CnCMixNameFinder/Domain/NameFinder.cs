@@ -52,20 +52,20 @@ namespace CnCMixNameFinder.Domain
         public NameFinder(HashMethod method, String startStr, String endStr, Char[] characters, UInt32 nameId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
         {
             this.m_NameGenerator = method;
-            Boolean cs = !this.m_NameGenerator.NeedsUpperCase;
+            Boolean caseSensitive = !this.m_NameGenerator.NeedsUpperCase;
             if (startStr == null)
                 startStr = String.Empty;
             if (endStr == null)
                 endStr = String.Empty;
             this.m_results = new List<String>();
 
-            this.m_StartString = cs ? startStr : startStr.ToUpperInvariant();
-            this.m_EndString = cs ? endStr : endStr.ToUpperInvariant();
+            this.m_StartString = caseSensitive ? startStr : startStr.ToUpperInvariant();
+            this.m_EndString = caseSensitive ? endStr : endStr.ToUpperInvariant();
             List<Char> charactersList = new List<Char>();
             for (int i = 0; i < characters.Length; i++)
             {
                 Char ch = characters[i];
-                if (!cs)
+                if (!caseSensitive)
                     ch = ch.ToString().ToUpperInvariant()[0];
                 if (!charactersList.Contains(ch))
                     charactersList.Add(ch);
@@ -225,7 +225,7 @@ namespace CnCMixNameFinder.Domain
             {
                 m_Reporter.ShowStatus(ProcessingStatus.RUNNING, testString, keyLength);
             }
-            if (this.m_NameId == m_NameGenerator.GetNameId(testString, true))
+            if (this.m_NameId == m_NameGenerator.GetNameIdCorrectCase(testString))
             {
                 if (m_Reporter != null)
                     m_Reporter.ShowStatus(ProcessingStatus.FOUND, testString, keyLength);
