@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D6FBFAB3-D9E4-46C5-8B1F-7A0362F32D5C}</ProjectGuid>
+    <ProjectGuid>{B82A9C5C-BE21-48A8-AE2A-847CBBBF927A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MissionNameChecker</RootNamespace>
-    <AssemblyName>MissionNameChecker</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>CnCMixNameFinder</RootNamespace>
+    <AssemblyName>CnCMixNameFinder</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -44,17 +47,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="domain\NameFinder.cs" />
     <Compile Include="domain\NameGenerator.cs" />
-    <Compile Include="idcalc.cs">
+    <Compile Include="FrmMixNameFinder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="idcalc.Designer.cs">
-      <DependentUpon>idcalc.cs</DependentUpon>
+    <Compile Include="FrmMixNameFinder.Designer.cs">
+      <DependentUpon>FrmMixNameFinder.cs</DependentUpon>
     </Compile>
+    <Compile Include="domain\NameFinderReporter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="idcalc.resx">
-      <DependentUpon>idcalc.cs</DependentUpon>
+    <EmbeddedResource Include="FrmMixNameFinder.resx">
+      <DependentUpon>FrmMixNameFinder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -77,7 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\winnotes.ico" />
+    <Content Include="Resources\winnotes.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

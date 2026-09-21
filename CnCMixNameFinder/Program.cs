@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
-namespace MissionNameChecker
+namespace CnCMixNameFinder
 {
     static class Program
     {
@@ -14,7 +15,7 @@ namespace MissionNameChecker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new idcalc());
+            Application.Run(new FrmMixNameFinder());
         }
     }
 }

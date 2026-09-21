@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MissionNameChecker.domain
+namespace CnCMixNameFinder.domain
 {
     class NameGenerator
     {
