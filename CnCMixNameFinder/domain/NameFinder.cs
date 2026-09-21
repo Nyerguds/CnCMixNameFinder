@@ -52,6 +52,7 @@ namespace CnCMixNameFinder.domain
         private NameFinderReporter m_Reporter;
         private Boolean m_CancelRun;
         private String m_CancelString;
+        private HashMethod m_NameGenerator;
         #endregion
 
         #region Public properties
@@ -64,8 +65,9 @@ namespace CnCMixNameFinder.domain
         #endregion
 
         #region Public functions
-        public NameFinder(String startStr, String endStr, String extension, UInt32 fileId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
+        public NameFinder(HashMethod method, String startStr, String endStr, String extension, UInt32 fileId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
         {
+            this.m_NameGenerator = method;
             if (startStr == null)
                 startStr = String.Empty;
             if (endStr == null)
@@ -241,7 +243,7 @@ namespace CnCMixNameFinder.domain
             {
                 m_Reporter.ShowStatus(ProcessingStatus.RUNNING, testFileName, keyLength + m_SurroundingLength);
             }
-            if (m_FileId == NameGenerator.getNameId(testFileName))
+            if (m_FileId == m_NameGenerator.GetNameId(testFileName))
             {
                 if (m_Reporter != null)
                     m_Reporter.ShowStatus(ProcessingStatus.FOUND, testFileName, keyLength + m_SurroundingLength);

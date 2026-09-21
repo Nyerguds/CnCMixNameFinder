@@ -20,17 +20,35 @@ namespace CnCMixNameFinder
         private readonly String StrButtonPause = "Pause";
         private readonly String StrButtonUnpause = "Unpause";
         private NameFinder m_namefinder;
-
-
+        
         private enum State
         {
             READY,
             BUSY
         }
 
+        private HashMethod[] hashMethods = 
+        {
+            new HashROL(),     // TD/RA
+            new HashCRC32(),   // TS/RA2
+            new HashObscure(), // setup mix files
+            new HashBR(),      // Blade Runner (not implemented)
+            new HashLoL3()     // Lands of Lore 3 (not implemented)
+        };
+
+        /*/
+            ROL (TD/RA)
+            CRC32 (TS/RA2)
+            poor mans (Setup.Mix)
+            Unknown (BR TLK)
+            Unknown2 (LoL3)
+        //*/
+
+
         public FrmMixNameFinder()
         {
             InitializeComponent();
+            cmbHashMethod.DataSource = hashMethods;
         }
 
         private void Generate(Object parameters)
@@ -45,11 +63,12 @@ namespace CnCMixNameFinder
             Int32 minLength = (Int32)arrParams[5];
             Int32 maxLength = (Int32)arrParams[6];
             Boolean getAllMatches = (Boolean)arrParams[7];
+            HashMethod hashMethod = (HashMethod)arrParams[8];
 
             txtResult.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtResult, String.Empty });
             txtStatus.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtStatus, String.Empty });
 
-            m_namefinder = new NameFinder(startStr, endStr, extension, fileId, minLength, maxLength, this);
+            m_namefinder = new NameFinder(hashMethod, startStr, endStr, extension, fileId, minLength, maxLength, this);
             m_namefinder.FindName(alphabetOnly, getAllMatches);
 
             if (!m_namefinder.IsMatched)
@@ -80,7 +99,8 @@ namespace CnCMixNameFinder
             Object[] arrParams = new Object[] 
             {
                 txtStart.Text, txtEnd.Text, txtExtension.Text, chkAlphabetOnly.Checked,
-                fileId, (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value, chkFindAllMatches.Checked
+                fileId, (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value, chkFindAllMatches.Checked,
+                cmbHashMethod.SelectedValue
             };
 
             processingThread = new Thread(Generate);
@@ -105,7 +125,7 @@ namespace CnCMixNameFinder
                 this.lblStatus.Invoke(new invoke_delegate_with_arg(setStatusText), State.READY);
             else
                 this.lblStatus.Invoke(new invoke_delegate_with_arg(setStatusText), State.BUSY);
-        }
+		}
 
         private void setStatusText(object s)
         {
@@ -249,6 +269,11 @@ namespace CnCMixNameFinder
                 m_namefinder.RunPaused = !isPaused;
                 btnPause.Text = (isPaused ? StrButtonPause : StrButtonUnpause);
             }
+        }
+
+        private void lblStatus_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

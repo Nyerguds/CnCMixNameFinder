@@ -49,6 +49,8 @@
             this.lblMinLength = new System.Windows.Forms.Label();
             this.chkFindAllMatches = new System.Windows.Forms.CheckBox();
             this.btnPause = new System.Windows.Forms.Button();
+            this.lblHashMethod = new System.Windows.Forms.Label();
+            this.cmbHashMethod = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nmrMaxLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmrMinLength)).BeginInit();
             this.SuspendLayout();
@@ -57,7 +59,7 @@
             // 
             this.txtStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtStart.Location = new System.Drawing.Point(112, 36);
+            this.txtStart.Location = new System.Drawing.Point(112, 62);
             this.txtStart.Name = "txtStart";
             this.txtStart.Size = new System.Drawing.Size(150, 20);
             this.txtStart.TabIndex = 2;
@@ -65,7 +67,7 @@
             // lblStart
             // 
             this.lblStart.AutoSize = true;
-            this.lblStart.Location = new System.Drawing.Point(12, 39);
+            this.lblStart.Location = new System.Drawing.Point(12, 65);
             this.lblStart.Name = "lblStart";
             this.lblStart.Size = new System.Drawing.Size(70, 13);
             this.lblStart.TabIndex = 1;
@@ -75,7 +77,7 @@
             // 
             this.txtEnd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtEnd.Location = new System.Drawing.Point(112, 62);
+            this.txtEnd.Location = new System.Drawing.Point(112, 88);
             this.txtEnd.Name = "txtEnd";
             this.txtEnd.Size = new System.Drawing.Size(150, 20);
             this.txtEnd.TabIndex = 3;
@@ -83,7 +85,7 @@
             // lblEnd
             // 
             this.lblEnd.AutoSize = true;
-            this.lblEnd.Location = new System.Drawing.Point(12, 65);
+            this.lblEnd.Location = new System.Drawing.Point(12, 91);
             this.lblEnd.Name = "lblEnd";
             this.lblEnd.Size = new System.Drawing.Size(67, 13);
             this.lblEnd.TabIndex = 1;
@@ -93,7 +95,7 @@
             // 
             this.txtId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtId.Location = new System.Drawing.Point(112, 12);
+            this.txtId.Location = new System.Drawing.Point(112, 38);
             this.txtId.MaxLength = 8;
             this.txtId.Name = "txtId";
             this.txtId.Size = new System.Drawing.Size(150, 20);
@@ -102,7 +104,7 @@
             // lblId
             // 
             this.lblId.AutoSize = true;
-            this.lblId.Location = new System.Drawing.Point(12, 15);
+            this.lblId.Location = new System.Drawing.Point(12, 41);
             this.lblId.Name = "lblId";
             this.lblId.Size = new System.Drawing.Size(49, 13);
             this.lblId.TabIndex = 1;
@@ -112,7 +114,7 @@
             // 
             this.txtExtension.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtExtension.Location = new System.Drawing.Point(112, 88);
+            this.txtExtension.Location = new System.Drawing.Point(112, 114);
             this.txtExtension.Name = "txtExtension";
             this.txtExtension.Size = new System.Drawing.Size(150, 20);
             this.txtExtension.TabIndex = 4;
@@ -120,7 +122,7 @@
             // lblExtension
             // 
             this.lblExtension.AutoSize = true;
-            this.lblExtension.Location = new System.Drawing.Point(12, 91);
+            this.lblExtension.Location = new System.Drawing.Point(12, 117);
             this.lblExtension.Name = "lblExtension";
             this.lblExtension.Size = new System.Drawing.Size(53, 13);
             this.lblExtension.TabIndex = 1;
@@ -131,18 +133,18 @@
             this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtResult.Location = new System.Drawing.Point(12, 294);
+            this.txtResult.Location = new System.Drawing.Point(12, 299);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResult.Size = new System.Drawing.Size(250, 155);
+            this.txtResult.Size = new System.Drawing.Size(260, 172);
             this.txtResult.TabIndex = 12;
             // 
             // lblResult
             // 
             this.lblResult.AutoSize = true;
-            this.lblResult.Location = new System.Drawing.Point(9, 278);
+            this.lblResult.Location = new System.Drawing.Point(13, 283);
             this.lblResult.Name = "lblResult";
             this.lblResult.Size = new System.Drawing.Size(45, 13);
             this.lblResult.TabIndex = 1;
@@ -150,7 +152,7 @@
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Location = new System.Drawing.Point(16, 214);
+            this.btnGenerate.Location = new System.Drawing.Point(16, 240);
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(80, 23);
             this.btnGenerate.TabIndex = 10;
@@ -162,9 +164,9 @@
             // 
             this.nmrMaxLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmrMaxLength.Location = new System.Drawing.Point(112, 140);
+            this.nmrMaxLength.Location = new System.Drawing.Point(112, 166);
             this.nmrMaxLength.Maximum = new decimal(new int[] {
-            8,
+            32,
             0,
             0,
             0});
@@ -185,7 +187,7 @@
             // lblMaxLength
             // 
             this.lblMaxLength.AutoSize = true;
-            this.lblMaxLength.Location = new System.Drawing.Point(12, 142);
+            this.lblMaxLength.Location = new System.Drawing.Point(12, 168);
             this.lblMaxLength.Name = "lblMaxLength";
             this.lblMaxLength.Size = new System.Drawing.Size(83, 13);
             this.lblMaxLength.TabIndex = 1;
@@ -195,17 +197,18 @@
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblStatus.Location = new System.Drawing.Point(13, 249);
+            this.lblStatus.Location = new System.Drawing.Point(13, 266);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(83, 13);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "STATUSLABEL";
+            this.lblStatus.Click += new System.EventHandler(this.lblStatus_Click);
             // 
             // txtStatus
             // 
             this.txtStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtStatus.Location = new System.Drawing.Point(0, 463);
+            this.txtStatus.Location = new System.Drawing.Point(0, 477);
             this.txtStatus.Name = "txtStatus";
             this.txtStatus.ReadOnly = true;
             this.txtStatus.Size = new System.Drawing.Size(284, 20);
@@ -214,7 +217,7 @@
             // btnAbort
             // 
             this.btnAbort.Enabled = false;
-            this.btnAbort.Location = new System.Drawing.Point(188, 214);
+            this.btnAbort.Location = new System.Drawing.Point(188, 240);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(80, 23);
             this.btnAbort.TabIndex = 11;
@@ -225,7 +228,7 @@
             // chkAlphabetOnly
             // 
             this.chkAlphabetOnly.AutoSize = true;
-            this.chkAlphabetOnly.Location = new System.Drawing.Point(112, 168);
+            this.chkAlphabetOnly.Location = new System.Drawing.Point(112, 194);
             this.chkAlphabetOnly.Name = "chkAlphabetOnly";
             this.chkAlphabetOnly.Size = new System.Drawing.Size(164, 17);
             this.chkAlphabetOnly.TabIndex = 7;
@@ -236,9 +239,9 @@
             // 
             this.nmrMinLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmrMinLength.Location = new System.Drawing.Point(112, 114);
+            this.nmrMinLength.Location = new System.Drawing.Point(112, 140);
             this.nmrMinLength.Maximum = new decimal(new int[] {
-            8,
+            32,
             0,
             0,
             0});
@@ -259,7 +262,7 @@
             // lblMinLength
             // 
             this.lblMinLength.AutoSize = true;
-            this.lblMinLength.Location = new System.Drawing.Point(12, 116);
+            this.lblMinLength.Location = new System.Drawing.Point(12, 142);
             this.lblMinLength.Name = "lblMinLength";
             this.lblMinLength.Size = new System.Drawing.Size(80, 13);
             this.lblMinLength.TabIndex = 1;
@@ -270,7 +273,7 @@
             this.chkFindAllMatches.AutoSize = true;
             this.chkFindAllMatches.Checked = true;
             this.chkFindAllMatches.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkFindAllMatches.Location = new System.Drawing.Point(112, 191);
+            this.chkFindAllMatches.Location = new System.Drawing.Point(112, 217);
             this.chkFindAllMatches.Name = "chkFindAllMatches";
             this.chkFindAllMatches.Size = new System.Drawing.Size(102, 17);
             this.chkFindAllMatches.TabIndex = 8;
@@ -280,7 +283,7 @@
             // btnPause
             // 
             this.btnPause.Enabled = false;
-            this.btnPause.Location = new System.Drawing.Point(102, 214);
+            this.btnPause.Location = new System.Drawing.Point(102, 240);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(80, 23);
             this.btnPause.TabIndex = 31;
@@ -288,12 +291,37 @@
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
+            // lblHashMethod
+            // 
+            this.lblHashMethod.AutoSize = true;
+            this.lblHashMethod.Location = new System.Drawing.Point(12, 15);
+            this.lblHashMethod.Name = "lblHashMethod";
+            this.lblHashMethod.Size = new System.Drawing.Size(85, 13);
+            this.lblHashMethod.TabIndex = 1;
+            this.lblHashMethod.Text = "Hashing Method";
+            // 
+            // cmbHashMethod
+            // 
+            this.cmbHashMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbHashMethod.FormattingEnabled = true;
+            this.cmbHashMethod.Items.AddRange(new object[] {
+            "ROL (TD/RA)",
+            "CRC32 (TS/RA2)",
+            "poor mans (Setup.Mix)",
+            "Unknown (BR TLK)",
+            "Unknown2 (LoL3)"});
+            this.cmbHashMethod.Location = new System.Drawing.Point(112, 11);
+            this.cmbHashMethod.Name = "cmbHashMethod";
+            this.cmbHashMethod.Size = new System.Drawing.Size(150, 21);
+            this.cmbHashMethod.TabIndex = 32;
+            // 
             // FrmMixNameFinder
             // 
             this.AcceptButton = this.btnGenerate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 483);
+            this.ClientSize = new System.Drawing.Size(284, 497);
+            this.Controls.Add(this.cmbHashMethod);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.chkFindAllMatches);
             this.Controls.Add(this.chkAlphabetOnly);
@@ -306,6 +334,7 @@
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblMinLength);
             this.Controls.Add(this.lblMaxLength);
+            this.Controls.Add(this.lblHashMethod);
             this.Controls.Add(this.lblId);
             this.Controls.Add(this.lblEnd);
             this.Controls.Add(this.txtExtension);
@@ -315,7 +344,7 @@
             this.Controls.Add(this.lblStart);
             this.Controls.Add(this.txtResult);
             this.Controls.Add(this.txtStart);
-            this.Icon = global::CnCMixNameFinder.Properties.Resources.winnotes;
+            this.Icon = global::CnCMixNameFinder.Properties.Resources.cchasher;
             this.MinimumSize = new System.Drawing.Size(300, 460);
             this.Name = "FrmMixNameFinder";
             this.Text = "MixNameFinder";
@@ -351,6 +380,8 @@
         private System.Windows.Forms.Label lblMinLength;
         private System.Windows.Forms.CheckBox chkFindAllMatches;
         private System.Windows.Forms.Button btnPause;
+        private System.Windows.Forms.Label lblHashMethod;
+        private System.Windows.Forms.ComboBox cmbHashMethod;
     }
 }
 
