@@ -76,3 +76,4 @@ Release date: 2026-09-21 14:11
 * Updated to .Net Framework 4.8.1.
 * Fixed typo in the names of the "Obfuscate" methods.
 * Added line at the start of the log to give info about what hashing type is being performed.
+* Switched to exclusively building "any CPU" builds.
