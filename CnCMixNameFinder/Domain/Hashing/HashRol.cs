@@ -45,7 +45,7 @@ namespace CnCMixNameFinder.Domain
             {
                 // get next uint32 chunk
                 UInt32 buffer = this.GetUInt32FromBuffer(values, l, ref i);
-                if (i < l)
+                if (i <= l)
                     id = BitFunctions.RotateLeft(id, rot) + buffer;
                 else
                     id = BitFunctions.RotateLeft(id, 1) + buffer;
