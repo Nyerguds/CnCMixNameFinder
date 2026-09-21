@@ -48,25 +48,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="domain\CRC32.cs" />
-    <Compile Include="domain\HashBR.cs" />
-    <Compile Include="domain\HashCRC32.cs" />
-    <Compile Include="domain\HashLoL3.cs" />
-    <Compile Include="domain\HashMethod.cs" />
-    <Compile Include="domain\HashObscure.cs" />
-    <Compile Include="domain\NameFinder.cs" />
-    <Compile Include="domain\HashROL.cs" />
-    <Compile Include="FrmMixNameFinder.cs">
+    <Compile Include="Domain\CRC32.cs" />
+    <Compile Include="Domain\HashBR.cs" />
+    <Compile Include="Domain\HashCRC32.cs" />
+    <Compile Include="Domain\HashLoL3.cs" />
+    <Compile Include="Domain\HashMethod.cs" />
+    <Compile Include="Domain\HashObscure.cs" />
+    <Compile Include="Domain\NameFinder.cs" />
+    <Compile Include="Domain\HashROL.cs" />
+    <Compile Include="UI\FrmMixNameFinder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmMixNameFinder.Designer.cs">
+    <Compile Include="UI\FrmMixNameFinder.Designer.cs">
       <DependentUpon>FrmMixNameFinder.cs</DependentUpon>
     </Compile>
-    <Compile Include="domain\NameFinderReporter.cs" />
+    <Compile Include="Domain\NameFinderReporter.cs" />
+    <Compile Include="UI\FrmTestHash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FrmTestHash.Designer.cs">
+      <DependentUpon>FrmTestHash.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmMixNameFinder.resx">
+    <EmbeddedResource Include="UI\FrmMixNameFinder.resx">
       <DependentUpon>FrmMixNameFinder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FrmTestHash.resx">
+      <DependentUpon>FrmTestHash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Misc.Blowfish;
 
-namespace CnCMixNameFinder.domain
+namespace CnCMixNameFinder.Domain
 {
     public class HashROL : HashMethod
     {

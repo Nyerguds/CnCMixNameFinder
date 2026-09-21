@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CnCMixNameFinder.domain;
+using CnCMixNameFinder.Domain;
 using System.Threading;
 
-namespace CnCMixNameFinder
+namespace CnCMixNameFinder.UI
 {
     public partial class FrmMixNameFinder : Form, NameFinderReporter
     {
@@ -27,28 +27,10 @@ namespace CnCMixNameFinder
             BUSY
         }
 
-        private HashMethod[] hashMethods = 
-        {
-            new HashROL(),     // TD/RA
-            new HashCRC32(),   // TS/RA2
-            new HashObscure(), // setup mix files
-            new HashBR(),      // Blade Runner (not implemented)
-            new HashLoL3()     // Lands of Lore 3 (not implemented)
-        };
-
-        /*/
-            ROL (TD/RA)
-            CRC32 (TS/RA2)
-            poor mans (Setup.Mix)
-            Unknown (BR TLK)
-            Unknown2 (LoL3)
-        //*/
-
-
         public FrmMixNameFinder()
         {
             InitializeComponent();
-            cmbHashMethod.DataSource = hashMethods;
+            cmbHashMethod.DataSource = HashMethod.GetRegisteredMethods();
         }
 
         private void Generate(Object parameters)
@@ -271,9 +253,9 @@ namespace CnCMixNameFinder
             }
         }
 
-        private void lblStatus_Click(object sender, EventArgs e)
+        private void lblHashMethod_DoubleClick(object sender, EventArgs e)
         {
-
+            new FrmTestHash().ShowDialog(this);
         }
     }
 }

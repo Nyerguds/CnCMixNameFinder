@@ -1,4 +1,4 @@
-﻿namespace CnCMixNameFinder
+﻿namespace CnCMixNameFinder.UI
 {
     partial class FrmMixNameFinder
     {
@@ -202,7 +202,6 @@
             this.lblStatus.Size = new System.Drawing.Size(83, 13);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "STATUSLABEL";
-            this.lblStatus.Click += new System.EventHandler(this.lblStatus_Click);
             // 
             // txtStatus
             // 
@@ -299,17 +298,14 @@
             this.lblHashMethod.Size = new System.Drawing.Size(85, 13);
             this.lblHashMethod.TabIndex = 1;
             this.lblHashMethod.Text = "Hashing Method";
+            this.lblHashMethod.DoubleClick += new System.EventHandler(this.lblHashMethod_DoubleClick);
             // 
             // cmbHashMethod
             // 
+            this.cmbHashMethod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbHashMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbHashMethod.FormattingEnabled = true;
-            this.cmbHashMethod.Items.AddRange(new object[] {
-            "ROL (TD/RA)",
-            "CRC32 (TS/RA2)",
-            "poor mans (Setup.Mix)",
-            "Unknown (BR TLK)",
-            "Unknown2 (LoL3)"});
             this.cmbHashMethod.Location = new System.Drawing.Point(112, 11);
             this.cmbHashMethod.Name = "cmbHashMethod";
             this.cmbHashMethod.Size = new System.Drawing.Size(150, 21);

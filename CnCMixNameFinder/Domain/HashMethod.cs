@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CnCMixNameFinder.domain
+namespace CnCMixNameFinder.Domain
 {
     public abstract class HashMethod
     {
@@ -19,5 +19,18 @@ namespace CnCMixNameFinder.domain
         {
             return GetMethodName();
         }
+
+        public static HashMethod[] GetRegisteredMethods()
+        {
+            return new HashMethod[] {
+                new HashROL(),     // TD/RA
+                new HashCRC32(),   // TS/RA2
+                new HashObscure(), // setup mix files
+                new HashBR(),      // Blade Runner (not implemented)
+                new HashLoL3()     // Lands of Lore 3 (not implemented)
+            };
+        }
+
+
     }
 }

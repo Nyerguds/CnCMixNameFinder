@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CnCMixNameFinder.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,11 +12,14 @@ namespace CnCMixNameFinder
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(String[] parms)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMixNameFinder());
+            if (parms.Length > 0 && "-t".Equals(parms[0]))
+                Application.Run(new FrmTestHash());
+            else
+                Application.Run(new FrmMixNameFinder());
         }
     }
 }

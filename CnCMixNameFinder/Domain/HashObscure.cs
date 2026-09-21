@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CnCMixNameFinder.domain
+namespace CnCMixNameFinder.Domain
 {
     public class HashObscure : HashMethod
     {
@@ -25,7 +25,6 @@ namespace CnCMixNameFinder.domain
             Byte v12 = values[5]; // [sp+21h] [bp-FFh]@3
             Byte v13 = values[6]; // [sp+22h] [bp-FEh]@3
             Int64 v3 = v13 + 0xA * (v12 + 0xA * (v11 + 0xA * (v10 + 0xA * (v9 + 0xA * v8)))) - 0x516150;
-
             return (UInt32)v3;
         }
 
@@ -39,9 +38,6 @@ namespace CnCMixNameFinder.domain
                 values = values2;
             }
             Int64 res = values[6] + 10 * (values[5] + 10 * (values[4] + 10 * (values[3] + 10 * (values[1] + 10 * values[0])))) - OBSCURE_MAGIC_NUM;
-            if (res < 0)
-                res += 0x100000000;
-
             return (UInt32)res;
         }
 

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CnCMixNameFinder.domain
+namespace CnCMixNameFinder.Domain
 {
-    public class HashLoL3 : HashMethod
+    class HashBR : HashMethod
     {
-        public override uint GetNameId(String name)
+        public override uint GetNameId(string name)
         {
             return 0;
         }
 
         public override string GetMethodName()
         {
-            return "Unknown (Lands of Lore 3)";
+            return "Unknown (Blade Runner)";
         }
     }
 }
