@@ -1,43 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CnCMixNameFinder.Domain
+﻿namespace CnCMixNameFinder.Domain
 {
     public class HashRor : HashMethod
     {
+        public override string DisplayName => "ROR (Lands of Lore 3)";
+        public override string SimpleName => "ROR";
 
-        public override UInt32 GetNameIdCorrectCase(Byte[] data)
+        public override uint GetNameIdCorrectCase(byte[] data)
         {
-            UInt32 id = 0;
-            for (Int32 i = 0; i < data.Length; i++)
+            uint id = 0;
+            for (int i = 0; i < data.Length; i++)
             {
-                UInt32 rotatedValue = BitFunctions.RotateRight(id, 6);
-                id = (UInt32)((data[i] - 48) & 63) + rotatedValue;
+                uint rotatedValue = BitFunctions.RotateRight(id, 6);
+                id = (uint)((data[i] - 48) & 63) + rotatedValue;
             }
             return id;
         }
 
-        public override UInt32 GetNameIdCorrectCase(String name)
+        public override uint GetNameIdCorrectCase(string name)
         {
-            UInt32 id = 0;
-            for (Int32 i = 0; i < name.Length; i++)
+            uint id = 0;
+            for (int i = 0; i < name.Length; i++)
             {
-                UInt32 rotatedValue = BitFunctions.RotateRight(id, 6);
-                id = (UInt32)((name[i] - 48) & 63) + rotatedValue;
+                uint rotatedValue = BitFunctions.RotateRight(id, 6);
+                id = (uint)((name[i] - 48) & 63) + rotatedValue;
             }
             return id;
-        }
-
-        public override String GetDisplayName()
-        {
-            return "ROR (Lands of Lore 3)";
-        }
-
-        public override String GetSimpleName()
-        {
-            return "ROR";
         }
     }
 }

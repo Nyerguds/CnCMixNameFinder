@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using LarchenkoCRC32;
 
@@ -8,9 +6,12 @@ namespace CnCMixNameFinder.Domain
 {
     public class HashCrc32 : HashMethod
     {
-        public override UInt32 GetNameIdCorrectCase(String name)
+        public override string DisplayName => "CRC32 (TS/RA2)";
+        public override string SimpleName => "CRC32";
+
+        public override uint GetNameIdCorrectCase(string name)
         {
-            Byte[] data = Encoding.ASCII.GetBytes(name);
+            byte[] data = Encoding.ASCII.GetBytes(name);
             return GetNameIdCorrectCase(data);
         }
 
@@ -30,16 +31,16 @@ namespace CnCMixNameFinder.Domain
         }
         */
 
-        public override UInt32 GetNameIdCorrectCase(Byte[] data)
+        public override uint GetNameIdCorrectCase(byte[] data)
         {
             int l1 = data.Length;
             // Fill buffer up to next multiple of 4 bytes
             if ((l1 & 3) != 0)
             {
-                Int32 l2 = (l1 + 3) & ~3;
-                Byte[] data2 = new Byte[l2];
+                int l2 = (l1 + 3) & ~3;
+                byte[] data2 = new byte[l2];
                 Array.Copy(data, 0, data2, 0, l1);
-                Int32 a = l1 >> 2;
+                int a = l1 >> 2;
                 data2[l1] = (byte)(l1 - (a << 2));
                 for (int i = l1 + 1; i < l2; i++)
                 {
@@ -47,18 +48,7 @@ namespace CnCMixNameFinder.Domain
                 }
                 data = data2;
             }
-            return ParallelCRC.Compute(new ArraySegment<Byte>(data));
-        }
-
-
-        public override String GetDisplayName()
-        {
-            return "CRC32 (TS/RA2)";
-        }
-
-        public override String GetSimpleName()
-        {
-            return "CRC32";
+            return ParallelCRC.Compute(new ArraySegment<byte>(data));
         }
     }
 }

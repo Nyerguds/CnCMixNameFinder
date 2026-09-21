@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace CnCMixNameFinder.Domain
@@ -17,58 +16,58 @@ namespace CnCMixNameFinder.Domain
         #endregion
 
         #region Private variables
-        protected List<String> m_results;
+        protected List<string> m_results;
 
-        protected Boolean m_isRunning = false;
-        protected Boolean m_isMatched = false;
+        protected bool m_isRunning = false;
+        protected bool m_isMatched = false;
         protected DateTime m_timeStarted = DateTime.MinValue;
-        protected Double m_timeTaken = 0;
+        protected double m_timeTaken = 0;
         // The length of the m_charactersToTest / m_dictionaryToTest array
         // is stored in an additional variable to increase performance
-        protected Int32 m_entriesToTestLength = 0;
-        protected Int64 m_computedKeys = 0;
+        protected int m_entriesToTestLength = 0;
+        protected long m_computedKeys = 0;
 
-        protected Boolean m_isDictionary;
-        protected Char[] m_charactersToTest;
-        protected String[] m_dictionaryToTest;
-        protected Boolean m_getAllMatches;
-        protected Boolean m_skipSpaceTrim;
+        protected bool m_isDictionary;
+        protected char[] m_charactersToTest;
+        protected string[] m_dictionaryToTest;
+        protected bool m_getAllMatches;
+        protected bool m_skipSpaceTrim;
         protected int m_spaceIndex;
-        protected Boolean m_addSeparator;
-        protected String m_separator;
+        protected bool m_addSeparator;
+        protected string m_separator;
 
-        protected UInt32[] m_NameIdsInput;
-        protected HashSet<UInt32> m_NameIds;
-        protected String m_StartString;
-        protected String m_EndString;
-        protected Int32 m_MinLength;
-        protected Int32 m_MaxLength;
+        protected uint[] m_NameIdsInput;
+        protected HashSet<uint> m_NameIds;
+        protected string m_StartString;
+        protected string m_EndString;
+        protected int m_MinLength;
+        protected int m_MaxLength;
         protected NameFinderReporter m_Reporter;
-        protected Object m_RunPausedLock = new Object();
-        protected Boolean m_RunPaused;
-        protected Object m_RunCancelledLock = new Object();
-        protected Boolean m_RunCancelled;
-        protected Boolean m_RunCancelledForClose;
-        protected String m_CancelString;
-        protected String m_CancelState;
+        protected object m_RunPausedLock = new object();
+        protected bool m_RunPaused;
+        protected object m_RunCancelledLock = new object();
+        protected bool m_RunCancelled;
+        protected bool m_RunCancelledForClose;
+        protected string m_CancelString;
+        protected string m_CancelState;
         protected HashMethod m_HashGenerator;
         #endregion
 
         #region Public properties
-        public virtual String HashMethodDisplayName { get { return m_HashGenerator == null ? null : m_HashGenerator.GetDisplayName(); } }
-        public virtual String HashMethodSimpleName { get { return m_HashGenerator == null ? null : m_HashGenerator.GetSimpleName(); } }
-        public virtual Boolean IsMatched { get { return m_isMatched; } }
-        public virtual List<String> Results { get { return m_results; } }
-        public virtual DateTime TimeStarted { get { return m_timeStarted; } }
-        public virtual Double TimeTaken { get { return m_timeTaken; } }
-        public virtual Int64 ComputedKeys { get { return m_computedKeys; } }
-        public virtual UInt32[] NameIds { get { return this.m_NameIdsInput.ToArray(); } }
-        public virtual Int32 MinLength { get { return this.m_MinLength; } }
-        public virtual Int32 MaxLength { get { return this.m_MaxLength; } }
-        public virtual String StartString { get { return this.m_StartString; } }
-        public virtual String EndString { get { return this.m_EndString; } }
+        public virtual string HashMethodDisplayName => m_HashGenerator?.DisplayName;
+        public virtual string HashMethodSimpleName => m_HashGenerator?.SimpleName;
+        public virtual bool IsMatched => m_isMatched;
+        public virtual List<string> Results => m_results;
+        public virtual DateTime TimeStarted => m_timeStarted;
+        public virtual double TimeTaken => m_timeTaken;
+        public virtual long ComputedKeys => m_computedKeys;
+        public virtual uint[] NameIds => m_NameIdsInput.ToArray();
+        public virtual int MinLength => m_MinLength;
+        public virtual int MaxLength => m_MaxLength;
+        public virtual string StartString => m_StartString;
+        public virtual string EndString => m_EndString;
 
-        public virtual Boolean RunWasCancelled
+        public virtual bool RunWasCancelled
         {
             get
             {
@@ -88,7 +87,7 @@ namespace CnCMixNameFinder.Domain
             }
         }
 
-        public virtual Boolean RunWasCancelledForClose
+        public virtual bool RunWasCancelledForClose
         {
             get
             {
@@ -113,7 +112,7 @@ namespace CnCMixNameFinder.Domain
             }
         }
 
-        public virtual Boolean RunPaused
+        public virtual bool RunPaused
         {
             get
             {
@@ -136,42 +135,42 @@ namespace CnCMixNameFinder.Domain
         #endregion
 
         #region Public functions
-        public NameFinder(HashMethod method, String startStr, String endStr, Char[] characters, UInt32[] nameIds, Int32 minLength, Int32 maxLength, Boolean skipSpaceTrimmed, NameFinderReporter reporter)
+        public NameFinder(HashMethod method, string startStr, string endStr, char[] characters, uint[] nameIds, int minLength, int maxLength, bool skipSpaceTrimmed, NameFinderReporter reporter)
             : this(method, startStr, endStr, characters, null, nameIds, minLength, maxLength, skipSpaceTrimmed, null, reporter)
         {
         }
 
-        public NameFinder(HashMethod method, String startStr, String endStr, String[] dictionary, UInt32[] nameIds, Int32 minLength, Int32 maxLength, String separator, NameFinderReporter reporter)
+        public NameFinder(HashMethod method, string startStr, string endStr, string[] dictionary, uint[] nameIds, int minLength, int maxLength, string separator, NameFinderReporter reporter)
             : this(method, startStr, endStr, null, dictionary, nameIds, minLength, maxLength, false, separator, reporter)
         {
         }
 
-        protected NameFinder(HashMethod method, String startStr, String endStr, Char[] characters, String[] dictionary, UInt32[] nameIds, Int32 minLength, Int32 maxLength, Boolean skipSpaceTrimmed, String separator, NameFinderReporter reporter)
+        protected NameFinder(HashMethod method, string startStr, string endStr, char[] characters, string[] dictionary, uint[] nameIds, int minLength, int maxLength, bool skipSpaceTrimmed, string separator, NameFinderReporter reporter)
         {
-            this.m_HashGenerator = method;
-            Boolean caseSensitive = !this.m_HashGenerator.NeedsUpperCase;
+            m_HashGenerator = method;
+            bool caseSensitive = !m_HashGenerator.NeedsUpperCase;
             if (startStr == null)
                 startStr = String.Empty;
             if (endStr == null)
                 endStr = String.Empty;
-            this.m_results = new List<String>();
-            this.m_StartString = caseSensitive ? startStr : startStr.ToUpperInvariant();
-            this.m_EndString = caseSensitive ? endStr : endStr.ToUpperInvariant();
-            this.m_isDictionary = dictionary != null;
-            this.m_charactersToTest = null;
-            this.m_dictionaryToTest = null;
+            m_results = new List<string>();
+            m_StartString = caseSensitive ? startStr : startStr.ToUpperInvariant();
+            m_EndString = caseSensitive ? endStr : endStr.ToUpperInvariant();
+            m_isDictionary = dictionary != null;
+            m_charactersToTest = null;
+            m_dictionaryToTest = null;
             if (!m_isDictionary)
             {
-                HashSet<Char> charactersList = new HashSet<Char>();
+                HashSet<char> charactersList = new HashSet<char>();
                 for (int i = 0; i < characters.Length; i++)
                 {
-                    Char ch = characters[i];
+                    char ch = characters[i];
                     if (!caseSensitive)
                         ch = ch.ToString().ToUpperInvariant()[0];
                     if (!charactersList.Contains(ch))
                         charactersList.Add(ch);
                 }
-                this.m_charactersToTest = charactersList.ToArray();
+                m_charactersToTest = charactersList.ToArray();
                 //Array.Sort(m_charactersToTest);
 
                 // in dictionary, items should not have spaces. So this only applies to char generating.
@@ -180,11 +179,11 @@ namespace CnCMixNameFinder.Domain
             }
             else
             {
-                HashSet<String> stringsSet = new HashSet<String>();
-                List<String> stringsList = new List<String>();
+                HashSet<string> stringsSet = new HashSet<string>();
+                List<string> stringsList = new List<string>();
                 for (int i = 0; i < dictionary.Length; i++)
                 {
-                    String str = dictionary[i];
+                    string str = dictionary[i];
                     if (!caseSensitive)
                         str = str.ToUpperInvariant();
                     if (!stringsSet.Contains(str))
@@ -194,22 +193,22 @@ namespace CnCMixNameFinder.Domain
                     }
                 }
                 stringsSet.Clear();
-                this.m_dictionaryToTest = stringsList.ToArray();
+                m_dictionaryToTest = stringsList.ToArray();
                 // Don't sort: it makes the initial state impossible to manipulate
                 //Array.Sort(m_dictionaryToTest);
                 m_skipSpaceTrim = false;
-                this.m_addSeparator = !String.IsNullOrEmpty(separator);
-                this.m_separator = separator;
+                m_addSeparator = !String.IsNullOrEmpty(separator);
+                m_separator = separator;
 
             }
-            this.m_NameIdsInput = nameIds.ToArray();
-            this.m_NameIds = new HashSet<uint>(nameIds);
-            this.m_MinLength = Math.Max(1, Math.Min(maxLength, minLength));
-            this.m_MaxLength = Math.Max(1, Math.Max(maxLength, minLength));
-            this.m_Reporter = reporter;
+            m_NameIdsInput = nameIds.ToArray();
+            m_NameIds = new HashSet<uint>(nameIds);
+            m_MinLength = Math.Max(1, Math.Min(maxLength, minLength));
+            m_MaxLength = Math.Max(1, Math.Max(maxLength, minLength));
+            m_Reporter = reporter;
         }
 
-        public virtual void FindName(Boolean getAllMatches, params int[] initialValues)
+        public virtual void FindName(bool getAllMatches, params int[] initialValues)
         {
             if (m_isRunning)
             {
@@ -224,10 +223,10 @@ namespace CnCMixNameFinder.Domain
                 m_CancelString = null;
                 m_CancelState = null;
                 m_getAllMatches = getAllMatches;
-                Int32 currentGenLength = m_MinLength;
-                Int32 maxGenLength = m_MaxLength;
+                int currentGenLength = m_MinLength;
+                int maxGenLength = m_MaxLength;
                 // check if the string isn't fully filled
-                String empty = this.GetFullString(new int[0], null);
+                string empty = GetFullString(new int[0], null);
                 if (currentGenLength == 0 && StringMatches(empty, 0))
                 {
                     m_isMatched = true;
@@ -238,7 +237,7 @@ namespace CnCMixNameFinder.Domain
                 {
                     if (initialValues != null)
                     {
-                        int maxVal = (this.m_isDictionary ? m_dictionaryToTest.Length : m_charactersToTest.Length) - 1;
+                        int maxVal = (m_isDictionary ? m_dictionaryToTest.Length : m_charactersToTest.Length) - 1;
                         for (int i = 0; i < initialValues.Length; ++i)
                         {
                             initialValues[i] = Math.Max(0, Math.Min(initialValues[i], maxVal));
@@ -250,7 +249,7 @@ namespace CnCMixNameFinder.Domain
                     {
                         // The estimated length of the password will be increased and every possible key
                         // for this key length will be created and compared against the password
-                        this.StartBruteForce(currentGenLength, initialValues);
+                        StartBruteForce(currentGenLength, initialValues);
                         // Only use initial values once.
                         initialValues = null;
                         if (RunWasCancelled && m_CancelString != null)
@@ -276,13 +275,13 @@ namespace CnCMixNameFinder.Domain
             }
         }
 
-        public virtual void CancelRun(Boolean forClose)
+        public virtual void CancelRun(bool forClose)
         {
             if (forClose)
             {
-                this.RunWasCancelledForClose = true;
+                RunWasCancelledForClose = true;
             }
-            this.RunWasCancelled = true;
+            RunWasCancelled = true;
         }
         #endregion
 
@@ -291,7 +290,7 @@ namespace CnCMixNameFinder.Domain
         /// Starts the recursive method which will create the keys via brute force
         /// </summary>
         /// <param name="keyLength">The length of the key</param>
-        protected virtual void StartBruteForce(Int32 keyLength, int[] initialValues)
+        protected virtual void StartBruteForce(int keyLength, int[] initialValues)
         {
             int[] keyChars = new int[keyLength]; //this.CreateCharArray(keyLength, m_charactersToTest[0]);
             if (initialValues != null)
@@ -303,7 +302,7 @@ namespace CnCMixNameFinder.Domain
                 }
             }
             // The index of the last character will be stored for slight perfomance improvement
-            this.CreateNewKey(0, keyChars, keyLength, keyLength - 1, initialValues != null);
+            CreateNewKey(0, keyChars, keyLength, keyLength - 1, initialValues != null);
         }
 
         /// <summary>
@@ -313,12 +312,12 @@ namespace CnCMixNameFinder.Domain
         /// <param name="currentEntryPosition">The position of the entry which is replaced by new items currently.</param>
         /// <param name="keyEntries">The current key represented as int array, to be filled ith the array of items to iterate.</param>
         /// <param name="keyLength">The length of the full key, to know when to end.</param>
-        protected virtual void CreateNewKey(Int32 currentCharPosition, int[] keyEntries, Int32 keyLength, Int32 indexOfLastChar, bool fromInit)
+        protected virtual void CreateNewKey(int currentCharPosition, int[] keyEntries, int keyLength, int indexOfLastChar, bool fromInit)
         {
-            Int32 nextCharPosition = currentCharPosition + 1;
+            int nextCharPosition = currentCharPosition + 1;
             int start = fromInit ? keyEntries[currentCharPosition] : 0;
             // We are looping through the full length of our entries-to-test array
-            for (Int32 i = start; i < m_entriesToTestLength; i++)
+            for (int i = start; i < m_entriesToTestLength; i++)
             {
                 if (m_isMatched && !m_getAllMatches)
                     return;
@@ -331,7 +330,7 @@ namespace CnCMixNameFinder.Domain
                 // The method calls itself recursively until all positions of the key char array have been replaced
                 if (currentCharPosition < indexOfLastChar)
                 {
-                    this.CreateNewKey(nextCharPosition, keyEntries, keyLength, indexOfLastChar, fromInit);
+                    CreateNewKey(nextCharPosition, keyEntries, keyLength, indexOfLastChar, fromInit);
                     fromInit = false;
                     continue;
                 }
@@ -339,7 +338,7 @@ namespace CnCMixNameFinder.Domain
                 // check if run is paused
                 if (RunPaused)
                 {
-                    String currentString = this.GetFullString(keyEntries, null);
+                    string currentString = GetFullString(keyEntries, null);
                     if (m_Reporter != null)
                         m_Reporter.ShowStatus(this, ProcessingStatus.PAUSED, currentString, keyLength);
                     while (RunPaused)
@@ -353,7 +352,7 @@ namespace CnCMixNameFinder.Domain
                 if (RunWasCancelled)
                 {
                     m_CancelState = String.Join(",", keyEntries.Select(k => k.ToString()).ToArray());
-                    m_CancelString = this.GetFullString(keyEntries, null);
+                    m_CancelString = GetFullString(keyEntries, null);
                     return;
                 }
                 // If space-ended entries need to be skipped, check if generated part starts or ends with space.
@@ -363,7 +362,7 @@ namespace CnCMixNameFinder.Domain
                 }
                 // The char array will be converted to a string and compared to the password.
                 // If the password is matched, the loop breaks and the password is stored as result.
-                if (StringMatches(keyEntries, keyLength, null, out String res))
+                if (StringMatches(keyEntries, keyLength, null, out string res))
                 {
                     if (!m_isMatched)
                     {
@@ -374,7 +373,7 @@ namespace CnCMixNameFinder.Domain
                         return;
                 }
                 // Dictionary only: if 'with spaces' is enabled, also generate the same match with spaces between the words.
-                if (m_addSeparator && keyLength > 1 && StringMatches(keyEntries, keyLength, m_separator, out String res2))
+                if (m_addSeparator && keyLength > 1 && StringMatches(keyEntries, keyLength, m_separator, out string res2))
                 {
                     if (!m_isMatched)
                     {
@@ -387,13 +386,13 @@ namespace CnCMixNameFinder.Domain
             }
         }
 
-        protected virtual Boolean StringMatches(int[] newStringChars, Int32 keyLength, string separator, out String generated)
+        protected virtual bool StringMatches(int[] newStringChars, int keyLength, string separator, out string generated)
         {
-            generated = this.GetFullString(newStringChars, separator);
+            generated = GetFullString(newStringChars, separator);
             return StringMatches(generated, keyLength);
         }
 
-        protected virtual Boolean StringMatches(String testString, Int32 keyLength)
+        protected virtual bool StringMatches(string testString, int keyLength)
         {
             // Only show one in every million keys. This is a lot less than it would seem; should show about a key per second (depending on algo and PC speed of course).
             if (m_Reporter != null && (m_computedKeys & 0xFFFFF) == 0)
@@ -401,8 +400,8 @@ namespace CnCMixNameFinder.Domain
                 m_Reporter.ShowStatus(this, ProcessingStatus.RUNNING, testString, keyLength);
             }
             m_computedKeys++;
-            UInt32 computedKey = m_HashGenerator.GetNameIdCorrectCase(testString);
-            if (this.m_NameIds.Contains(computedKey))
+            uint computedKey = m_HashGenerator.GetNameIdCorrectCase(testString);
+            if (m_NameIds.Contains(computedKey))
             {
                 if (m_Reporter != null)
                     m_Reporter.ShowStatus(this, ProcessingStatus.FOUND, computedKey.ToString("X8"), testString, keyLength);
@@ -411,12 +410,12 @@ namespace CnCMixNameFinder.Domain
             return false;
         }
 
-        protected virtual String GetFullString(int[] newStringChars, string separator)
+        protected virtual string GetFullString(int[] newStringChars, string separator)
         {
             int len = newStringChars.Length;
             if (m_isDictionary)
             {
-                String[] entries = new String[len];
+                string[] entries = new string[len];
                 for (int i = 0; i < len; i++)
                 {
                     entries[i] = m_dictionaryToTest[newStringChars[i]];
@@ -425,12 +424,12 @@ namespace CnCMixNameFinder.Domain
             }
             else
             {
-                Char[] entries = new Char[len];
+                char[] entries = new char[len];
                 for (int i = 0; i < len; i++)
                 {
                     entries[i] = m_charactersToTest[newStringChars[i]];
                 }
-                return String.Concat(m_StartString, new String(entries), m_EndString);
+                return String.Concat(m_StartString, new string(entries), m_EndString);
             }
         }
         #endregion

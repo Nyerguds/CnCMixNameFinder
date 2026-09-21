@@ -37,7 +37,7 @@ namespace CnCMixNameFinder.UI
         {
             InitializeComponent();
             cmbHashMethod.DataSource = HashMethod.GetRegisteredMethods();
-            this.Text = "MixNameFinder " + ProgramVersion();
+            Text = "MixNameFinder " + ProgramVersion();
             ModeChanged();
             //IniFile inf = new IniFile("settings.ini", "");
         }
@@ -86,23 +86,23 @@ namespace CnCMixNameFinder.UI
             Char[] chars;
             if (rdbBruteForce.Checked)
             {
-                if (this.txtChars.Text.Length == 0)
+                if (txtChars.Text.Length == 0)
                 {
                     MessageBox.Show(this, "No characters set to generate names from!", "MixNameFinder");
                     return;
                 }
-                chars = this.txtChars.Text.ToCharArray();
+                chars = txtChars.Text.ToCharArray();
                 dictionaryFilename = null;
             }
             else
             {
-                if (String.IsNullOrEmpty(this.txtDictionaryFile.Text))
+                if (String.IsNullOrEmpty(txtDictionaryFile.Text))
                 {
                     MessageBox.Show(this, "No file set to use as dictionary!", "MixNameFinder");
                     return;
                 }
                 chars = null;
-                dictionaryFilename = this.txtDictionaryFile.Text;
+                dictionaryFilename = txtDictionaryFile.Text;
                 if (!File.Exists(dictionaryFilename))
                 {
                     MessageBox.Show(this, "File not found \"" + dictionaryFilename + "\"!", "MixNameFinder");
@@ -146,8 +146,8 @@ namespace CnCMixNameFinder.UI
 
             Boolean isDictionary = filename != null;
 
-            txtResult.Invoke(new Action(() => this.txtResult.Text = String.Empty));
-            txtStatus.Invoke(new Action(() => this.txtStatus.Text = String.Empty));
+            txtResult.Invoke(new Action(() => txtResult.Text = String.Empty));
+            txtStatus.Invoke(new Action(() => txtStatus.Text = String.Empty));
 
             if (isDictionary)
             {
@@ -164,7 +164,7 @@ namespace CnCMixNameFinder.UI
             {
                 if (!m_namefinder.IsMatched)
                 {
-                    txtResult.Invoke(new Action(() => this.txtResult.Text = "(NOT FOUND)"));
+                    txtResult.Invoke(new Action(() => txtResult.Text = "(NOT FOUND)"));
                 }
                 EnableComponents(true);
             }
@@ -193,26 +193,37 @@ namespace CnCMixNameFinder.UI
 
         protected virtual void EnableComponents(Boolean enabled)
         {
-            this.cmbHashMethod.Invoke(new Action(() => SetControlEnabled(this.cmbHashMethod, enabled)));
-            this.txtId.Invoke(new Action(() => this.txtId.ReadOnly = !enabled));
-            this.txtStart.Invoke(new Action(() => this.txtStart.ReadOnly = !enabled));
-            this.txtEnd.Invoke(new Action(() => this.txtEnd.ReadOnly = !enabled));
-            this.nmrMinLength.Invoke(new Action(() => this.nmrMinLength.ReadOnly = !enabled));
-            this.nmrMaxLength.Invoke(new Action(() => this.nmrMaxLength.ReadOnly = !enabled));
-            this.txtChars.Invoke(new Action(() => this.txtChars.ReadOnly = !enabled));
-            this.btnQuickChars.Invoke(new Action(() => this.btnQuickChars.Enabled = enabled));
-            this.chkFindAllMatches.Invoke(new Action(() => this.chkFindAllMatches.Enabled = enabled));
-            this.chkSpaces.Invoke(new Action(() => this.chkSpaces.Enabled = enabled));
-            if (enabled) this.Invoke(new Action(() => CheckForSpaces()));
-            this.btnGenerate.Invoke(new Action(() => this.btnGenerate.Enabled = enabled));
-            this.btnContinueState.Invoke(new Action(() => this.btnContinueState.Enabled = enabled));
-            this.btnPause.Invoke(new Action(() => this.btnPause.Enabled = !enabled));
-            this.btnPause.Invoke(new Action(() => this.btnPause.Text = this.StrButtonPause));
-            this.btnAbort.Invoke(new Action(() => this.btnAbort.Enabled = !enabled));
+            cmbHashMethod.Invoke(new Action(() => SetControlEnabled(cmbHashMethod, enabled)));
+            txtId.Invoke(new Action(() => txtId.ReadOnly = !enabled));
+            txtStart.Invoke(new Action(() => txtStart.ReadOnly = !enabled));
+            txtEnd.Invoke(new Action(() => txtEnd.ReadOnly = !enabled));
+            nmrMinLength.Invoke(new Action(() => nmrMinLength.ReadOnly = !enabled));
+            nmrMaxLength.Invoke(new Action(() => nmrMaxLength.ReadOnly = !enabled));
+            rdbBruteForce.Invoke(new Action(() => rdbBruteForce.Enabled = enabled));
+            txtChars.Invoke(new Action(() => txtChars.ReadOnly = !enabled || !rdbBruteForce.Checked));
+            btnQuickChars.Invoke(new Action(() => btnQuickChars.Enabled = enabled && rdbBruteForce.Checked));
+            rdbDictionary.Invoke(new Action(() => rdbDictionary.Enabled = enabled));
+            btnSelectDictionaryFile.Invoke(new Action(() => btnSelectDictionaryFile.Enabled = enabled && rdbDictionary.Checked));
+            chkFindAllMatches.Invoke(new Action(() => chkFindAllMatches.Enabled = enabled));
+            chkSpaces.Invoke(new Action(() => chkSpaces.Enabled = enabled));
+            if (enabled) Invoke(new Action(() => CheckForSpaces()));
+            txtSeparator.Invoke(new Action(() => txtSeparator.ReadOnly = !enabled || !rdbDictionary.Checked));
+            btnGenerate.Invoke(new Action(() => btnGenerate.Enabled = enabled));
+            btnContinueState.Invoke(new Action(() => btnContinueState.Enabled = enabled));
+            btnPause.Invoke(new Action(() => btnPause.Enabled = !enabled));
+            btnPause.Invoke(new Action(() => btnPause.Text = StrButtonPause));
+            btnAbort.Invoke(new Action(() => btnAbort.Enabled = !enabled));
+
             if (enabled)
-                this.lblStatus.Invoke(new Action(() => this.SetStatusText(State.READY)));
+            {
+                // The above takes care of disabling. For enabling correctly, just call the mode switch logic.
+                Invoke(new Action(() => ModeChanged()));
+                lblStatus.Invoke(new Action(() => SetStatusText(State.READY)));
+            }
             else
-                this.lblStatus.Invoke(new Action(() => this.SetStatusText(State.BUSY)));
+            {
+                lblStatus.Invoke(new Action(() => SetStatusText(State.BUSY)));
+            }
         }
 
         protected virtual void SetStatusText(State state)
@@ -244,7 +255,7 @@ namespace CnCMixNameFinder.UI
 
         protected virtual void FrmMixNameFinder_Shown(Object sender, EventArgs e)
         {
-            this.lblStatus.Invoke(new Action(() => this.SetStatusText(State.READY)));
+            lblStatus.Invoke(new Action(() => SetStatusText(State.READY)));
         }
 
         #region NameFinderReporter Members
@@ -281,10 +292,10 @@ namespace CnCMixNameFinder.UI
             }
             if (!origin.RunWasCancelledForClose)
             {
-                this.txtStatus.Invoke(new Action(() => this.txtStatus.Text = report));
+                txtStatus.Invoke(new Action(() => txtStatus.Text = report));
                 if (status == ProcessingStatus.ABORTED)
                 {
-                    this.Invoke(new Action(() => AskIfSave(currentKey, keyLength)));
+                    Invoke(new Action(() => AskIfSave(currentKey, keyLength)));
                 }
             }
             if (status == ProcessingStatus.FOUND)
@@ -298,7 +309,7 @@ namespace CnCMixNameFinder.UI
                         int? txtLen = (int?)txtResult.Invoke(new Func<int?>(() => { return txtResult.TextLength; }));
                         if (txtLen.HasValue && txtLen.Value > 0)
                             screenStr = Environment.NewLine + str;
-                        this.txtResult.Invoke(new Action(() => this.txtResult.AppendText(screenStr)));
+                        txtResult.Invoke(new Action(() => txtResult.AppendText(screenStr)));
                     }
                     catch { /* ignore */ }
                 }
@@ -351,7 +362,7 @@ namespace CnCMixNameFinder.UI
                 " and fill in the \"initial state\" preset with the end-state of the current run.";
             if (DialogResult.Yes == MessageBox.Show(message, "MixNameFinder", MessageBoxButtons.YesNo))
             {
-                this.nmrMinLength.IntValue = keyLength;
+                nmrMinLength.IntValue = keyLength;
                 initValue = currentKey;
             }
         }
@@ -501,7 +512,7 @@ namespace CnCMixNameFinder.UI
         {
             Button button = sender as Button;
             if (button != null)
-                OpenInsertToolStrip(button, this.txtChars);
+                OpenInsertToolStrip(button, txtChars);
         }
 
         protected virtual void btnSelectDictionaryFile_Click(Object sender, EventArgs e)
@@ -510,12 +521,12 @@ namespace CnCMixNameFinder.UI
             {
                 ofd.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
                 ofd.Multiselect = false;
-                String currentPath = this.txtDictionaryFile.Text;
+                String currentPath = txtDictionaryFile.Text;
                 ofd.FileName = String.IsNullOrEmpty(currentPath) ? String.Empty : Path.GetFileName(currentPath);
                 ofd.InitialDirectory = String.IsNullOrEmpty(currentPath) ? String.Empty : Path.GetDirectoryName(currentPath);
                 if (ofd.ShowDialog(this) == DialogResult.OK)
                 {
-                    this.txtDictionaryFile.Text = ofd.FileName;
+                    txtDictionaryFile.Text = ofd.FileName;
                 }
             }
         }
@@ -548,14 +559,14 @@ namespace CnCMixNameFinder.UI
             {
                 m_editingText.Add(sender);
                 String input = txtId.Text.ToUpperInvariant();
-                Int32 selStart = this.txtId.SelectionStart;
+                Int32 selStart = txtId.SelectionStart;
                 String output = new String(input.Where(x => (x >= '0' && x <= '9') || (x >= 'A' && x <= 'F') || x == ' ' || x == ',' || x == ';').ToArray());
                 if (String.Equals(txtId.Text, output))
                     return;
                 txtId.Text = output;
                 if (Math.Min(selStart, txtId.Text.Length) > 0 && selStart <= txtId.Text.Length && output[selStart - 1] != input[selStart - 1])
                     selStart--;
-                this.txtId.SelectionStart = Math.Min(selStart, txtId.Text.Length);
+                txtId.SelectionStart = Math.Min(selStart, txtId.Text.Length);
             }
             finally
             {
@@ -585,6 +596,11 @@ namespace CnCMixNameFinder.UI
             }
         }
 
+        private void chkSpaces_CheckedChanged(object sender, EventArgs e)
+        {
+            ModeChanged();
+        }
+
         protected virtual void ModeChanged()
         {
             bool isBruteForce = rdbBruteForce.Checked;
@@ -593,7 +609,7 @@ namespace CnCMixNameFinder.UI
             btnSelectDictionaryFile.Enabled = !isBruteForce;
             chkSpaces.Text = isBruteForce ? "Skip space-trimmable entries" : "Also test with separator";
             txtSeparator.Visible = !isBruteForce;
-            txtSeparator.Enabled = !isBruteForce && chkSpaces.Checked;
+            txtSeparator.ReadOnly = isBruteForce || !chkSpaces.Checked;
             int posLeft = chkSpaces.Right + chkSpaces.Margin.Right;
             txtSeparator.Left = posLeft;
             txtSeparator.Width = cmbHashMethod.Right - posLeft;
@@ -604,7 +620,7 @@ namespace CnCMixNameFinder.UI
         {
             if (e.Oldvalue != e.Newvalue)
             {
-                this.initValue = null;
+                initValue = null;
             }
         }
     }

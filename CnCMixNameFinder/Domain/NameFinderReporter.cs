@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CnCMixNameFinder.Domain
+﻿namespace CnCMixNameFinder.Domain
 {
     public interface NameFinderReporter
     {
-        void ShowStatus(NameFinder origin, ProcessingStatus status, String currentKey, String currentStr, Int32 keyLength);
-        void ShowStatus(NameFinder origin, ProcessingStatus status, String currentStr, Int32 keyLength);
+        void ShowStatus(NameFinder origin, ProcessingStatus status, string currentKey, string currentStr, int keyLength);
+        void ShowStatus(NameFinder origin, ProcessingStatus status, string currentStr, int keyLength);
     }
 
     public enum ProcessingStatus

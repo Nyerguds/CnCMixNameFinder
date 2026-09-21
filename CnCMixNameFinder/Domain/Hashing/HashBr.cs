@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CnCMixNameFinder.Domain
+﻿namespace CnCMixNameFinder.Domain
 {
     internal class HashBr : HashMethod
     {
-        public override UInt32 GetNameIdCorrectCase(String name)
+        public override string DisplayName => "Unknown (Blade Runner)";
+        public override string SimpleName => "BladeRunner";
+
+        public override uint GetNameIdCorrectCase(string name)
         {
             return 0;
         }
 
-        public override UInt32 GetNameIdCorrectCase(Byte[] data)
+        public override uint GetNameIdCorrectCase(byte[] data)
         {
             return 0;
-        }
-
-        public override String GetDisplayName()
-        {
-            return "Unknown (Blade Runner)";
-        }
-
-        public override String GetSimpleName()
-        {
-            return "Blade Runner";
         }
     }
 }

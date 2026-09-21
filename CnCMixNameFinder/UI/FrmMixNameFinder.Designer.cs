@@ -284,6 +284,7 @@
             this.chkSpaces.TabIndex = 18;
             this.chkSpaces.Text = "[Separator]";
             this.chkSpaces.UseVisualStyleBackColor = true;
+            this.chkSpaces.CheckedChanged += new System.EventHandler(this.chkSpaces_CheckedChanged);
             // 
             // rdbBruteForce
             // 
