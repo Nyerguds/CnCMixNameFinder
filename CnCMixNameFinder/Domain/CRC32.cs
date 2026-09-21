@@ -9,6 +9,8 @@
 #endregion
 
 /*/
+using System;
+
 namespace Misc.Blowfish
 {
 
@@ -89,6 +91,11 @@ namespace Misc.Blowfish
 			0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 		};
 
+		public static uint Calculate(byte[] data)
+		{
+			return Calculate(data, 0xFFFFFFFF);
+		}
+
 		/// <summary>
 		/// A fast (native) CRC32 implementation that can be used on a regular byte arrays.
 		/// </summary>
@@ -99,16 +106,22 @@ namespace Misc.Blowfish
 		/// </returns>
 		public static uint Calculate(byte[] data, uint polynomial)
 		{
+			return Calculate(data, 0, data.Length, polynomial);
+		}
+
+		public static uint Calculate(byte[] data, int start, int length)
+		{
+			return Calculate(data, start, length, 0xFFFFFFFF);
+		}
+
+		public static uint Calculate(byte[] data, int start, int length, uint polynomial)
+		{
 			var crc = polynomial;
-			for (var i = 0; i < data.Length; i++)
+			int end = Math.Min(data.Length, start + length);
+			for (var i = start; i < end; i++)
 				crc = (crc >> 8) ^ lookUp[(crc & 0xFF) ^ data[i]];
 			crc ^= polynomial;
 			return crc;
-		}
-
-		public static uint Calculate(byte[] data)
-		{
-			return Calculate(data, 0xFFFFFFFF);
 		}
 
 		/// <summary>

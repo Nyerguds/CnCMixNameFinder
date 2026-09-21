@@ -7,18 +7,41 @@ namespace CnCMixNameFinder.Domain
 {
     public abstract class HashMethod
     {
+        private static HashMethod[] registeredMethods = {
+                new HashRol1(),        // TD/RA
+                new HashCrc32(),       // TS/RA2
+                new HashRol3(),        // TS/RA2 setup
+                new HashRor(),         // Lands of Lore 3
+                new HashObscure(),     // setup mix files
+                new HashObfuscate(),   // hidden options
+                //new HashBR(),          // Blade Runner (not implemented)
+            };
+
         /// <summary>
         /// The hashing method. Assumes that the input is already formatted to the correct case according to NeedsUpperCase.
         /// </summary>
         /// <param name="name">String to hash.</param>
         /// <returns>The hashed value.</returns>
         public abstract UInt32 GetNameIdCorrectCase(String name);
-        
+
         /// <summary>
-        /// Returns the name of the hashing method.
+        /// The hashing method. Assumes that the input is already formatted to the correct case according to NeedsUpperCase.
         /// </summary>
-        /// <returns>The name of the hashing method.</returns>
-        public abstract String GetMethodName();
+        /// <param name="name">String to hash, as byte array.</param>
+        /// <returns>The hashed value.</returns>
+        public abstract UInt32 GetNameIdCorrectCase(Byte[] data);
+
+        /// <summary>
+        /// Returns the display name of the hashing method.
+        /// </summary>
+        /// <returns>The display name of the hashing method.</returns>
+        public abstract String GetDisplayName();
+
+        /// <summary>
+        /// Returns the short name of the hashing method.
+        /// </summary>
+        /// <returns>The short name of the hashing method.</returns>
+        public abstract String GetSimpleName();
 
         /// <summary>
         /// Allows supporting methods that are not case insensitive.
@@ -32,7 +55,6 @@ namespace CnCMixNameFinder.Domain
         {
             if (name == null)
                 name = String.Empty;
-            name = name.Trim();
             return GetNameIdCorrectCase(this.NeedsUpperCase ? name.ToUpperInvariant() : name);
         }
 
@@ -48,22 +70,13 @@ namespace CnCMixNameFinder.Domain
 
         public override String ToString()
         {
-            return GetMethodName();
+            return GetDisplayName();
         }
 
         public static HashMethod[] GetRegisteredMethods()
         {
-            return new HashMethod[] {
-                new HashRol1(),         // TD/RA
-                new HashCRC32(),       // TS/RA2
-                new HashRol3(),         // TS/RA2 setup
-                new HashROR(),         // Lands of Lore 3
-                new HashObscure(),     // setup mix files
-                //new  HashObfuscate(),  // hidden options
-                //new HashBR(),          // Blade Runner (not implemented)
-            };
+            return registeredMethods.ToArray();
         }
-
 
     }
 }

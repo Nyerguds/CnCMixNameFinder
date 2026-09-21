@@ -12,24 +12,31 @@ namespace CnCMixNameFinder.UI
 {
     public partial class FrmTestHash : Form
     {
-        public FrmTestHash()
+        public FrmTestHash() : this(null) { }
+        public FrmTestHash(HashMethod selectedValue)
         {
-            InitializeComponent();
-            cmbHashMethod.DataSource = HashMethod.GetRegisteredMethods();
+            this.InitializeComponent();
+            HashMethod[] methods = HashMethod.GetRegisteredMethods();
+            this.cmbHashMethod.DataSource = methods;
+            Type selType = selectedValue == null ? null : selectedValue.GetType();
+            HashMethod toSelect;
+            if (selType != null && (toSelect = methods.FirstOrDefault(m => m.GetType() == selType)) != null)
+                this.cmbHashMethod.SelectedItem = toSelect;
             this.TriggerCalculateHash(this.txtFilename, null);
         }
         
         private void TriggerCalculateHash(Object sender, EventArgs e)
         {
-            TextBoxUppercase(sender, e);
-            txtId.Text = ((HashMethod)cmbHashMethod.SelectedValue).GetNameIdHexString(this.txtFilename.Text);
+            TextBox textbox = txtFilename;
+            this.TextBoxUppercase(textbox, e);
+            this.txtId.Text = ((HashMethod)this.cmbHashMethod.SelectedValue).GetNameIdHexString(textbox.Text);
         }
 
         private void TextBoxUppercase(Object sender, EventArgs e)
         {
-            if (!(sender is TextBox))
+            TextBox textbox = sender as TextBox;
+            if (textbox == null)
                 return;
-            TextBox textbox = (TextBox)sender;
             Int32 selStart = textbox.SelectionStart;
             Int32 selLen = textbox.SelectionStart;
             textbox.Text = textbox.Text.ToUpperInvariant();
@@ -40,14 +47,6 @@ namespace CnCMixNameFinder.UI
         private void TxtFilename_Validating(Object sender, CancelEventArgs e)
         {
             this.TriggerCalculateHash(sender, e);
-        }
-
-        private void FrmTestHash_KeyDown(Object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
         }
     }
 }

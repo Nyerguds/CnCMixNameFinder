@@ -34,6 +34,7 @@
             this.txtId = new System.Windows.Forms.TextBox();
             this.lblFilename = new System.Windows.Forms.Label();
             this.txtFilename = new System.Windows.Forms.TextBox();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmbHashMethod
@@ -98,11 +99,24 @@
             this.txtFilename.TextChanged += new System.EventHandler(this.TriggerCalculateHash);
             this.txtFilename.Validating += new System.ComponentModel.CancelEventHandler(this.TxtFilename_Validating);
             // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnClose.Location = new System.Drawing.Point(242, 90);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.TabIndex = 38;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            // 
             // FrmTestHash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 100);
+            this.CancelButton = this.btnClose;
+            this.ClientSize = new System.Drawing.Size(334, 125);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblId);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.lblFilename);
@@ -111,10 +125,11 @@
             this.Controls.Add(this.lblHashMethod);
             this.Icon = global::CnCMixNameFinder.Properties.Resources.cchasher;
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(350, 138);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(350, 164);
             this.Name = "FrmTestHash";
             this.Text = "Test hashing algorithms";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmTestHash_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -128,5 +143,6 @@
         private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.Label lblFilename;
         private System.Windows.Forms.TextBox txtFilename;
+        private System.Windows.Forms.Button btnClose;
     }
 }
