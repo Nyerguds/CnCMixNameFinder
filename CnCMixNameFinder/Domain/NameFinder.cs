@@ -1,32 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace CnCMixNameFinder.Domain
 {
 
     /// <summary>
-    /// Brute force generation class for C&C mix filename encoding algorithm.
+    /// Brute force generation class for C&amp;C mix filename encoding algorithm.
     /// Brute force generator based on http://janosch.woschitz.org/a-simple-brute-force-algorithm-in-c-sharp/
     /// </summary>
-    class NameFinder
+    public class NameFinder
     {
         #region Private constants
-        //private UInt32 mysteryIdTst = 0xB8F1E8C0; // of ion1.juv
-        private readonly Char[] CharactersFull =
-        {
-            'A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-            '1','2','3','4','5','6','7','8','9','0','_','-'
-        };
-
-        private readonly Char[] CharactersAlphabetOnly =
-        {
-            'A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-        };
         #endregion
 
         #region Private variables
@@ -65,7 +51,7 @@ namespace CnCMixNameFinder.Domain
         #endregion
 
         #region Public functions
-        public NameFinder(HashMethod method, String startStr, String endStr, String extension, UInt32 fileId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
+        public NameFinder(HashMethod method, String startStr, String endStr, String extension, Char[] characters, UInt32 fileId, Int32 minLength, Int32 maxLength, NameFinderReporter reporter)
         {
             this.m_NameGenerator = method;
             if (startStr == null)
@@ -77,6 +63,7 @@ namespace CnCMixNameFinder.Domain
             m_StartString = startStr.ToUpperInvariant();
             m_EndString = endStr.ToUpperInvariant();
             m_ExtensionString = extension.ToUpperInvariant();
+            m_charactersToTest = characters;
             m_FileId = fileId;
             m_SurroundingLength = m_StartString.Length + m_EndString.Length;
             m_MinLength = Math.Max(m_SurroundingLength, minLength);
@@ -84,21 +71,13 @@ namespace CnCMixNameFinder.Domain
             m_Reporter = reporter;
         }
 
-        public void FindName(Boolean useOnlyAlphabet, Boolean getAllMatches)
+        public void FindName(Boolean getAllMatches)
         {
             m_CancelRun = false;
             m_CancelString = null;
-            if (useOnlyAlphabet)
-                m_charactersToTest = CharactersAlphabetOnly;
-            else
-                m_charactersToTest = CharactersFull;
-
             m_getAllMatches = getAllMatches;
-            
             Int32 maxGenLength = m_MaxLength - m_SurroundingLength;
-
             DateTime timeStarted = DateTime.Now;
-            
             // check if the string isn't fully filled
             if (maxGenLength == 0 && StringMatches(new Char[0], 0))
             {
@@ -118,7 +97,6 @@ namespace CnCMixNameFinder.Domain
 
             while ((!m_isMatched || m_getAllMatches) && estimatedPasswordLength < maxGenLength)
             {
-                
                 /* The estimated length of the password will be increased and every possible key for this
                     * key length will be created and compared against the password */
                 estimatedPasswordLength++;
@@ -249,8 +227,7 @@ namespace CnCMixNameFinder.Domain
                     m_Reporter.ShowStatus(ProcessingStatus.FOUND, testFileName, keyLength + m_SurroundingLength);
                 return true;
             }
-            else
-                return false;
+            return false;
         }
 
         private String getFileName(Char[] newStringChars)

@@ -16,22 +16,31 @@ namespace CnCMixNameFinder.UI
         {
             InitializeComponent();
             cmbHashMethod.DataSource = HashMethod.GetRegisteredMethods();
+            this.TriggerCalculateHash(this.txtFilename, null);
+        }
+        
+        private void TriggerCalculateHash(object sender, EventArgs e)
+        {
+            TextBoxUppercase(sender, e);
+            txtId.Text = ((HashMethod)cmbHashMethod.SelectedValue).GetNameIdHexString(this.txtFilename.Text);
         }
 
-        private void CalculateNameId()
+        private void TextBoxUppercase(object sender, EventArgs e)
         {
-            HashMethod hashMethod = (HashMethod)cmbHashMethod.SelectedValue;
-            txtId.Text = hashMethod.GetNameIdHexString(txtFilename.Text);
+            if (!(sender is TextBox))
+                return;
+            TextBox textbox = (TextBox)sender;
+            Int32 selStart = textbox.SelectionStart;
+            Int32 selLen = textbox.SelectionStart;
+            textbox.Text = textbox.Text.ToUpperInvariant();
+            textbox.SelectionStart = selStart;
+            textbox.SelectionStart = selLen;
         }
 
-        private void cmbHashMethod_SelectedIndexChanged(object sender, EventArgs e)
+        private void txtFilename_Validating(object sender, CancelEventArgs e)
         {
-            CalculateNameId();
+            this.TriggerCalculateHash(sender, e);
         }
 
-        private void TxtFilename_TextChanged(object sender, EventArgs e)
-        {
-            CalculateNameId();
-        }
     }
 }

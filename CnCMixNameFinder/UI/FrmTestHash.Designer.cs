@@ -46,7 +46,7 @@
             this.cmbHashMethod.Name = "cmbHashMethod";
             this.cmbHashMethod.Size = new System.Drawing.Size(200, 21);
             this.cmbHashMethod.TabIndex = 34;
-            this.cmbHashMethod.SelectedIndexChanged += new System.EventHandler(this.cmbHashMethod_SelectedIndexChanged);
+            this.cmbHashMethod.SelectedIndexChanged += new System.EventHandler(this.TriggerCalculateHash);
             // 
             // lblHashMethod
             // 
@@ -95,7 +95,8 @@
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.Size = new System.Drawing.Size(200, 20);
             this.txtFilename.TabIndex = 38;
-            this.txtFilename.TextChanged += new System.EventHandler(this.TxtFilename_TextChanged);
+            this.txtFilename.TextChanged += new System.EventHandler(this.TriggerCalculateHash);
+            this.txtFilename.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilename_Validating);
             // 
             // FrmTestHash
             // 

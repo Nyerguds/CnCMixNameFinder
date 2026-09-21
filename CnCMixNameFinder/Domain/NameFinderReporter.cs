@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CnCMixNameFinder.Domain
 {
-    interface NameFinderReporter
+    public interface NameFinderReporter
     {
         void ShowStatus(ProcessingStatus status, String currentStr, Int32 keyLength);
     }

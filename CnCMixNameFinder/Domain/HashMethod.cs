@@ -26,8 +26,8 @@ namespace CnCMixNameFinder.Domain
                 new HashROL(),     // TD/RA
                 new HashCRC32(),   // TS/RA2
                 new HashObscure(), // setup mix files
-                new HashBR(),      // Blade Runner (not implemented)
-                new HashLoL3()     // Lands of Lore 3 (not implemented)
+                //new HashBR(),      // Blade Runner (not implemented)
+                //new HashLoL3()     // Lands of Lore 3 (not implemented)
             };
         }
 

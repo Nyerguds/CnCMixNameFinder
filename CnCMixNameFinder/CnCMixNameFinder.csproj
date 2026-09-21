@@ -12,6 +12,8 @@
     <AssemblyName>CnCMixNameFinder</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -56,6 +58,7 @@
     <Compile Include="Domain\HashObscure.cs" />
     <Compile Include="Domain\NameFinder.cs" />
     <Compile Include="Domain\HashROL.cs" />
+    <Compile Include="Domain\ParallelCRC.cs" />
     <Compile Include="UI\FrmMixNameFinder.cs">
       <SubType>Form</SubType>
     </Compile>

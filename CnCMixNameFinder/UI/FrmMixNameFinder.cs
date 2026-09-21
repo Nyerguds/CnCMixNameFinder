@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using CnCMixNameFinder.Domain;
-using System.Threading;
 
 namespace CnCMixNameFinder.UI
 {
@@ -20,6 +17,9 @@ namespace CnCMixNameFinder.UI
         private readonly String StrButtonPause = "Pause";
         private readonly String StrButtonUnpause = "Unpause";
         private NameFinder m_namefinder;
+        private const String CHARS_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const String CHARS_NUMERIC = "0123456789";
+        private const String CHARS_FULL = CHARS_ALPHABET + CHARS_NUMERIC + "_";
         
         private enum State
         {
@@ -40,29 +40,29 @@ namespace CnCMixNameFinder.UI
             String startStr = (String)arrParams[0];
             String endStr = (String)arrParams[1];
             String extension = (String)arrParams[2];
-            Boolean alphabetOnly = (Boolean)arrParams[3];
-            UInt32 fileId = (UInt32)arrParams[4];
-            Int32 minLength = (Int32)arrParams[5];
-            Int32 maxLength = (Int32)arrParams[6];
+            UInt32 fileId = (UInt32)arrParams[3];
+            Int32 minLength = (Int32)arrParams[4];
+            Int32 maxLength = (Int32)arrParams[5];
+            Char[] chars = (Char[])arrParams[6];
             Boolean getAllMatches = (Boolean)arrParams[7];
             HashMethod hashMethod = (HashMethod)arrParams[8];
 
-            txtResult.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtResult, String.Empty });
-            txtStatus.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtStatus, String.Empty });
+            txtResult.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtResult, String.Empty);
+            txtStatus.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtStatus, String.Empty);
 
-            m_namefinder = new NameFinder(hashMethod, startStr, endStr, extension, fileId, minLength, maxLength, this);
-            m_namefinder.FindName(alphabetOnly, getAllMatches);
+            m_namefinder = new NameFinder(hashMethod, startStr, endStr, extension, chars, fileId, minLength, maxLength, this);
+            m_namefinder.FindName(getAllMatches);
 
             if (!m_namefinder.IsMatched)
             {
-                txtResult.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtResult, "(NOT FOUND)" });
+                txtResult.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtResult, "(NOT FOUND)");
             }
             EnableComponents(true);
         }
 
-        private void btnGenerate_Click(Object sender, EventArgs e)
+        private void BtnGenerate_Click(Object sender, EventArgs e)
         {
-            UInt32 fileId = 0;
+            UInt32 fileId;
             try
             {
                 fileId = Convert.ToUInt32(txtId.Text, 16);
@@ -77,12 +77,15 @@ namespace CnCMixNameFinder.UI
                 MessageBox.Show(this, "Minimum length can not be larger than maximum length!", "MixNameFinder");
                 return;
             }
-
-            Object[] arrParams = new Object[] 
+            if (this.txtChars.Text.Length == 0)
             {
-                txtStart.Text, txtEnd.Text, txtExtension.Text, chkAlphabetOnly.Checked,
-                fileId, (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value, chkFindAllMatches.Checked,
-                cmbHashMethod.SelectedValue
+                MessageBox.Show(this, "No characters set to generate names from!", "MixNameFinder");
+                return;
+            }
+            Object[] arrParams = {
+                txtStart.Text.ToUpperInvariant(), txtEnd.Text.ToUpperInvariant(), txtExtension.Text.ToUpperInvariant(), fileId,
+                (Int32)nmrMinLength.Value, (Int32)nmrMaxLength.Value, this.txtChars.Text.ToCharArray(),
+                chkFindAllMatches.Checked, cmbHashMethod.SelectedValue
             };
 
             processingThread = new Thread(Generate);
@@ -91,25 +94,26 @@ namespace CnCMixNameFinder.UI
 
         private void EnableComponents(Boolean enabled)
         {
-            txtId.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { txtId, !enabled });
-            txtStart.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { txtStart, !enabled });
-            txtEnd.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { txtEnd, !enabled });
-            txtExtension.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { txtExtension, !enabled });
-            nmrMinLength.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { nmrMinLength, !enabled });
-            nmrMaxLength.Invoke(new invoke_delegate_single_parameter(setReadOnly), new object[] { nmrMaxLength, !enabled });
-            chkAlphabetOnly.Invoke(new invoke_delegate_single_parameter(setControlEnabled), new object[] { chkAlphabetOnly, enabled });
-            chkFindAllMatches.Invoke(new invoke_delegate_single_parameter(setControlEnabled), new object[] { chkFindAllMatches, enabled });
-            btnGenerate.Invoke(new invoke_delegate_single_parameter(setControlEnabled), new object[] { btnGenerate, enabled });
-            btnPause.Invoke(new invoke_delegate_single_parameter(setControlEnabled), new object[] { btnPause, !enabled });
-            btnPause.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { btnPause, StrButtonPause });
-            btnAbort.Invoke(new invoke_delegate_single_parameter(setControlEnabled), new object[] { btnAbort, !enabled });
+            this.txtId.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtId, !enabled);
+            this.txtStart.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtStart, !enabled);
+            this.txtEnd.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtEnd, !enabled);
+            this.txtExtension.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.txtExtension, !enabled);
+            this.nmrMinLength.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.nmrMinLength, !enabled);
+            this.nmrMaxLength.Invoke(new invoke_delegate_single_parameter(this.SetReadOnly), this.nmrMaxLength, !enabled);
+            this.txtChars.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.txtChars, enabled);
+            this.btnQuickChars.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.btnQuickChars, enabled);
+            this.chkFindAllMatches.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.chkFindAllMatches, enabled);
+            this.btnGenerate.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.btnGenerate, enabled);
+            this.btnPause.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.btnPause, !enabled);
+            this.btnPause.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.btnPause, this.StrButtonPause);
+            this.btnAbort.Invoke(new invoke_delegate_single_parameter(this.SetControlEnabled), this.btnAbort, !enabled);
             if (enabled)
-                this.lblStatus.Invoke(new invoke_delegate_with_arg(setStatusText), State.READY);
+                this.lblStatus.Invoke(new invoke_delegate_with_arg(this.SetStatusText), State.READY);
             else
-                this.lblStatus.Invoke(new invoke_delegate_with_arg(setStatusText), State.BUSY);
+                this.lblStatus.Invoke(new invoke_delegate_with_arg(this.SetStatusText), State.BUSY);
 		}
 
-        private void setStatusText(object s)
+        private void SetStatusText(Object s)
         {
             State state = (State)s;
             if (state == State.READY)
@@ -124,13 +128,11 @@ namespace CnCMixNameFinder.UI
             }
         }
 
-        private void setControlEnabled(Object obj, object b)
+        private void SetControlEnabled(Object obj, Object b)
         {
             if (!(obj is Control))
                 return;
-
             Control c = (Control)obj;
-
             if (b is Boolean)
             {
                 c.Enabled = (Boolean)b;
@@ -144,54 +146,45 @@ namespace CnCMixNameFinder.UI
                         else
                             lb.BackColor = SystemColors.Window;
                     }
-                    catch { }
+                    catch { /* ignore */ }
                 }
             }
         }
 
-        private void setReadOnly(Object c, object value)
+        private void SetReadOnly(Object c, Object value)
         {
             if (c is TextBoxBase)
-            {
                 ((TextBoxBase)c).ReadOnly = (Boolean)value;
-            }
             else if (c is UpDownBase)
-            {
                 ((UpDownBase)c).ReadOnly = (Boolean)value;
-            }
         }
 
-        private void setTextValue(Object c, object value)
+        private void SetTextValue(Object c, Object value)
         {
             if (!(c is Control))
                 return;
-
             ((Control)c).Text = Convert.ToString(value);
         }
 
-        private String getTextValue(Object c)
+        private String GetTextValue(Object c)
         {
             if (!(c is Control))
                 return null;
-
             return ((Control)c).Text;
         }
 
-
-        private void appendTextToTextbox(Object c, object value)
+        private void AppendTextToTextbox(Object c, Object value)
         {
             if (!(c is TextBox))
                 return;
-
             ((TextBox)c).AppendText(Convert.ToString(value));
         }
 
 
-        private void FrmMixNameFinder_Shown(object sender, EventArgs e)
+        private void FrmMixNameFinder_Shown(Object sender, EventArgs e)
         {
-            this.lblStatus.Invoke(new invoke_delegate_with_arg(setStatusText), State.READY);
+            this.lblStatus.Invoke(new invoke_delegate_with_arg(this.SetStatusText), State.READY);
         }
-
 
         #region NameFinderReporter Members
 
@@ -220,30 +213,30 @@ namespace CnCMixNameFinder.UI
                         report = "Generating ended. Last match: " + currentStr;
                     break;
             }   
-            this.txtStatus.Invoke(new invoke_delegate_single_parameter(setTextValue), new object[] { txtStatus, report });
+            this.txtStatus.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), this.txtStatus, report);
             if (status == ProcessingStatus.FOUND)
             {
                 if (txtResult.Text.Length > 0)
                     currentStr = Environment.NewLine + currentStr;
-                this.txtResult.Invoke(new invoke_delegate_single_parameter(appendTextToTextbox), new object[] { txtResult, currentStr });
+                this.txtResult.Invoke(new invoke_delegate_single_parameter(this.AppendTextToTextbox), this.txtResult, currentStr);
             }
         }
 
         #endregion
 
-        private void FrmMixNameFinder_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMixNameFinder_FormClosing(Object sender, FormClosingEventArgs e)
         {
             if (processingThread != null && processingThread.IsAlive)
                 processingThread.Abort();
         }
 
-        private void btnAbort_Click(object sender, EventArgs e)
+        private void BtnAbort_Click(Object sender, EventArgs e)
         {
             if (m_namefinder != null)
                 m_namefinder.CancelRun();
         }
 
-        private void btnPause_Click(object sender, EventArgs e)
+        private void BtnPause_Click(Object sender, EventArgs e)
         {
             if (m_namefinder != null)
             {
@@ -253,9 +246,56 @@ namespace CnCMixNameFinder.UI
             }
         }
 
-        private void lblHashMethod_DoubleClick(object sender, EventArgs e)
+        private void LblHashMethod_DoubleClick(Object sender, EventArgs e)
         {
             new FrmTestHash().ShowDialog(this);
+        }
+
+        private void TextBoxUppercase(object sender, EventArgs e)
+        {
+            if (!(sender is TextBox))
+                return;
+            TextBox textbox = (TextBox)sender;
+            Int32 selStart = textbox.SelectionStart;
+            Int32 selLen = textbox.SelectionStart;
+            textbox.Text = textbox.Text.ToUpperInvariant();
+            textbox.SelectionStart = selStart;
+            textbox.SelectionStart = selLen;
+        }
+
+        private void ValidateUniqueUppercase(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!(sender is TextBox))
+                return;
+            TextBox textbox = (TextBox)sender;
+            List<Char> uniquechars = new List<Char>();
+            foreach (Char c in textbox.Text)
+            {
+                Char cu = c.ToString().ToUpperInvariant()[0];
+                if (!uniquechars.Contains(cu))
+                    uniquechars.Add(cu);
+            }
+            textbox.Text = new String(uniquechars.ToArray());
+        }
+
+        private void BtnQuickChars_Click(object sender, EventArgs e)
+        {
+            if (sender is Button)
+                OpenInsertToolStrip((Button)sender, this.txtChars);
+        }
+
+        private void OpenInsertToolStrip(Button button, TextBox target)
+        {
+            ContextMenuStrip cms = new ContextMenuStrip { ShowImageMargin = false };
+            ToolStripMenuItem tsmiAlphabet = new ToolStripMenuItem("Set to &alphabet characters");
+            tsmiAlphabet.Click += (sender, e) => target.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), target, CHARS_ALPHABET);
+            cms.Items.Add(tsmiAlphabet);
+            ToolStripMenuItem tsmiAlphanumeric = new ToolStripMenuItem("Set to alpha&numeric characters plus underscore");
+            tsmiAlphanumeric.Click += (sender, e) => target.Invoke(new invoke_delegate_single_parameter(this.SetTextValue), target, CHARS_FULL);
+            cms.Items.Add(tsmiAlphanumeric);
+            Point ptLowerLeft = new Point(0, button.Height);
+            ptLowerLeft = button.PointToScreen(ptLowerLeft);
+            cms.Show(ptLowerLeft);
         }
     }
 }

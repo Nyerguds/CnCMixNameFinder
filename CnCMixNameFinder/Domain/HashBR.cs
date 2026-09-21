@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CnCMixNameFinder.Domain
 {
-    class HashBR : HashMethod
+    internal class HashBR : HashMethod
     {
         public override uint GetNameId(string name)
         {

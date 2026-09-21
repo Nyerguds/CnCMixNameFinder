@@ -10,6 +10,7 @@
 
 namespace Misc.Blowfish
 {
+    /*/
 	/// <summary>
 	/// Static class that uses a lookup table to calculates CRC32
 	/// checksums of input strings.
@@ -19,7 +20,7 @@ namespace Misc.Blowfish
 		/// <summary>
 		/// The CRC32 lookup table
 		/// </summary>
-		static uint[] lookUp = new uint[256]
+		private static uint[] lookUp = new uint[256]
 		{
 			0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA,
 			0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
@@ -131,4 +132,5 @@ namespace Misc.Blowfish
 			return Calculate(data, len, 0xFFFFFFFF);
 		}
 	}
+    //*/
 }
