@@ -42,6 +42,7 @@ Release date: 2016-11-16 09:10
 Release date: 2016-11-21 10:13
 
 * Implemented Lands of Lore 3 hasher as "ROR".
+* Added a frame on the hash method label, to indicate it can be double-clicked to open the hash test tool.
 
 ## v1.0.6.0
 
@@ -54,7 +55,7 @@ Release date: 2022-02-26 18:27
 Release date: 2022-02-26 18:40
 
 * Fixed an issue in ROL3, replicating a bug in the algorithm that the actual games have.
-* Made the hash test tool more obvious, with a visible box around the label to click, a hand-cursor when hovering over it, and noly requiring a single click.
+* Made the hash test tool more obvious by showing a hand-cursor when hovering over it, and only requiring a single click to open.
 
 ## v1.0.7.0
 
